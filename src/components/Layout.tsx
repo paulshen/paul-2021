@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet"
 
 export default ({ children }: { children: React.ReactNode }) => (
   <>
-    <Helmet>
+    <Helmet title="Paul Shen">
       <link rel="stylesheet" href="https://use.typekit.net/lof7pip.css"></link>
     </Helmet>
     <Global

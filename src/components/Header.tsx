@@ -24,7 +24,7 @@ const Container = styled.div`
 `
 
 const RootLink = styled(Link)`
-  color: var(--blue);
+  color: var(--light);
   text-decoration: none;
   display: inline-block;
   margin-bottom: 2em;

@@ -10,6 +10,7 @@ import Header from "./Header"
 import Layout from "./Layout"
 import PageTitle from "./PageTitle"
 import { css } from "@emotion/core"
+import { Helmet } from "react-helmet"
 
 const Pre = styled.pre`
   font-family: var(--font-mono);
@@ -103,6 +104,7 @@ export default function PostPageLayout({
 }) {
   return (
     <Layout>
+      <Helmet title={`${mdx.frontmatter.title} | Paul Shen`} />
       <Header />
       <Body
         css={css`
