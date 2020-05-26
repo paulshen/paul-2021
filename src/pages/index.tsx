@@ -4,6 +4,7 @@ import React from "react"
 import Layout from "../components/Layout"
 
 const Container = styled.div`
+  font-family: var(--font-sans);
   margin: 3rem auto;
   max-width: 600px;
   display: flex;

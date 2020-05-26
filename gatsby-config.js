@@ -11,5 +11,6 @@ module.exports = {
       resolve: "gatsby-plugin-typescript",
     },
     "gatsby-plugin-emotion",
+    "gatsby-plugin-react-helmet",
   ],
 }
