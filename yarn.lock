@@ -1928,6 +1928,11 @@ babel-plugin-remove-graphql-queries@^2.9.1:
   resolved "https://registry.yarnpkg.com/babel-plugin-remove-graphql-queries/-/babel-plugin-remove-graphql-queries-2.9.1.tgz#098910dc9f2da62b7bf3feec0b169558cbb0755a"
   integrity sha512-Ua41OqiQ0yUi/9ZvbdhCKCkiCAdwCSVxtf5umV1scD6mMYd70eIA9or3M2nxhqHJ2leSRCYdyu771seEICkC3Q==
 
+babel-plugin-remove-graphql-queries@^2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-remove-graphql-queries/-/babel-plugin-remove-graphql-queries-2.9.2.tgz#20633ca9a0b245ba104a6e02d99ee09cb08c26cf"
+  integrity sha512-W6UpWAT18G27XfXvBmBoSsb5CfeMRf3K/dCkK5w0i9D9VC4CIj3162s2P2SGawqEraO1njKgjvkRfut8uTLUdw==
+
 babel-plugin-transform-react-remove-prop-types@^0.4.24:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.24.tgz#f2edaf9b4c6a5fbe5c1d678bfb531078c1555f3a"
@@ -4739,6 +4744,19 @@ gatsby-plugin-typescript@^2.4.2:
     "@babel/preset-typescript" "^7.9.0"
     "@babel/runtime" "^7.9.6"
     babel-plugin-remove-graphql-queries "^2.9.1"
+
+gatsby-plugin-typescript@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-typescript/-/gatsby-plugin-typescript-2.4.3.tgz#07393d842d8cb6fd3d0fcdafee36ab3ff55ab32b"
+  integrity sha512-smD3IlOigNR5gNQwRAp6TH4czsZ8mpO+WMxoE3M0G49JR/aj2kgh85pzB0yRWpq0/oUUf9guatQJxGhvUWUJYg==
+  dependencies:
+    "@babel/core" "^7.9.6"
+    "@babel/plugin-proposal-nullish-coalescing-operator" "^7.8.3"
+    "@babel/plugin-proposal-numeric-separator" "^7.8.3"
+    "@babel/plugin-proposal-optional-chaining" "^7.9.0"
+    "@babel/preset-typescript" "^7.9.0"
+    "@babel/runtime" "^7.9.6"
+    babel-plugin-remove-graphql-queries "^2.9.2"
 
 gatsby-react-router-scroll@^3.0.0:
   version "3.0.0"
@@ -10440,6 +10458,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript@^3.9.3:
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.3.tgz#d3ac8883a97c26139e42df5e93eeece33d610b8a"
+  integrity sha512-D/wqnB2xzNFIcoBG9FG8cXRDjiqSTbG2wd8DMZeQyJlP1vfTkIxH4GKveWaEBYySKIg+USu+E+EDIR47SqnaMQ==
 
 unc-path-regex@^0.1.2:
   version "0.1.2"
