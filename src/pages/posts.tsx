@@ -7,7 +7,7 @@ import PageTitle from "../components/PageTitle"
 
 const Body = styled.div`
   width: 80vw;
-  max-width: 35rem;
+  max-width: 33rem;
   margin: 0 auto;
 `
 const PostList = styled.ul`

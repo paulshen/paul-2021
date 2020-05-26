@@ -74,7 +74,7 @@ const Article = styled.article`
     font-family: var(--font-mono);
   }
   & > *:not(.full) {
-    max-width: 35rem;
+    max-width: 33rem;
     margin-left: auto;
     margin-right: auto;
   }
