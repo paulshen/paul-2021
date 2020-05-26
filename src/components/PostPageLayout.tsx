@@ -52,6 +52,11 @@ const Container = styled.div`
   max-width: 45rem;
   margin: 0 auto;
   padding-bottom: 4em;
+  @media (max-width: 600px) {
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
 `
 const Article = styled.article`
   font-family: var(--font-serif);

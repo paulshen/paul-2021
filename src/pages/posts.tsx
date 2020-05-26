@@ -9,6 +9,11 @@ const Body = styled.div`
   width: 80vw;
   max-width: 33rem;
   margin: 0 auto;
+  @media (max-width: 600px) {
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
 `
 const PostList = styled.div``
 const PostItem = styled(Link)`

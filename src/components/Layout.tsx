@@ -21,6 +21,8 @@ export default ({ children }: { children: React.ReactNode }) => (
           --dark: #1e1f20;
           --mid: #8c9194;
           --tan: #f8f3e6;
+          --orange: #dcb98f;
+          --blue: #d2e1e9;
           font-size: var(--font-size-default);
         }
         body {
@@ -28,6 +30,9 @@ export default ({ children }: { children: React.ReactNode }) => (
         }
         a {
           color: var(--dark);
+        }
+        p {
+          margin: 1em 0;
         }
       `}
     />

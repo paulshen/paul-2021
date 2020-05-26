@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 
 const Container = styled.div`
   font-family: var(--font-sans);
-  padding: 2em 0 0 2em;
+  padding: 2.5em 0 0 2.5em;
   position: fixed;
   left: 0;
   top: 0;
@@ -13,12 +13,18 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-left: 2em;
     padding-right: 2em;
     padding-top: 1.2em;
+  }
+  @media (max-width: 600px) {
+    padding-left: 1em;
+    padding-right: 1em;
   }
 `
 
 const RootLink = styled(Link)`
+  color: var(--blue);
   text-decoration: none;
   display: inline-block;
   margin-bottom: 2em;
