@@ -1,20 +1,10 @@
+import styled from "@emotion/styled"
 import React from "react"
+import Body from "../components/Body"
 import Header from "../components/Header"
 import Layout from "../components/Layout"
-import styled from "@emotion/styled"
 import PageTitle from "../components/PageTitle"
 
-const Body = styled.div`
-  width: 80vw;
-  max-width: 33rem;
-  margin: 0 auto;
-  padding-bottom: 4rem;
-  @media (max-width: 600px) {
-    width: auto;
-    padding-left: 1em;
-    padding-right: 1em;
-  }
-`
 const Paragraph = styled.p`
   font-family: var(--font-serif);
 `

@@ -1,20 +1,11 @@
 import styled from "@emotion/styled"
 import { graphql, Link } from "gatsby"
 import React from "react"
+import Body from "../components/Body"
 import Header from "../components/Header"
 import Layout from "../components/Layout"
 import PageTitle from "../components/PageTitle"
 
-const Body = styled.div`
-  width: 80vw;
-  max-width: 33rem;
-  margin: 0 auto;
-  @media (max-width: 600px) {
-    width: auto;
-    padding-left: 1em;
-    padding-right: 1em;
-  }
-`
 const PostList = styled.div``
 const PostItem = styled(Link)`
   border-top: 1px solid #ededed;

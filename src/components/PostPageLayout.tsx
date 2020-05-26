@@ -2,12 +2,14 @@ import styled from "@emotion/styled"
 import { MDXProvider } from "@mdx-js/react"
 import { graphql } from "gatsby"
 import { MDXRenderer } from "gatsby-plugin-mdx"
+import Highlight, { defaultProps } from "prism-react-renderer"
+import theme from "prism-react-renderer/themes/nightOwlLight"
 import React from "react"
+import Body from "./Body"
 import Header from "./Header"
 import Layout from "./Layout"
 import PageTitle from "./PageTitle"
-import Highlight, { defaultProps } from "prism-react-renderer"
-import theme from "prism-react-renderer/themes/nightOwlLight"
+import { css } from "@emotion/core"
 
 const Pre = styled.pre`
   font-family: var(--font-mono);
@@ -47,17 +49,6 @@ function CodeBlock({
   )
 }
 
-const Container = styled.div`
-  width: 80vw;
-  max-width: 45rem;
-  margin: 0 auto;
-  padding-bottom: 4em;
-  @media (max-width: 600px) {
-    width: auto;
-    padding-left: 1em;
-    padding-right: 1em;
-  }
-`
 const Article = styled.article`
   font-family: var(--font-serif);
   line-height: var(--line-height);
@@ -105,7 +96,11 @@ export default function PostPageLayout({
   return (
     <Layout>
       <Header />
-      <Container>
+      <Body
+        css={css`
+          max-width: 45rem;
+        `}
+      >
         <Article>
           <PageTitle>{mdx.frontmatter.title}</PageTitle>
           <ArticleDate>{mdx.frontmatter.date}</ArticleDate>
@@ -118,7 +113,7 @@ export default function PostPageLayout({
             <MDXRenderer>{mdx.body}</MDXRenderer>
           </MDXProvider>
         </Article>
-      </Container>
+      </Body>
     </Layout>
   )
 }
