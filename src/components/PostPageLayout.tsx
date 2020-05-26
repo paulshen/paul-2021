@@ -6,12 +6,47 @@ import React from "react"
 import Header from "./Header"
 import Layout from "./Layout"
 import PageTitle from "./PageTitle"
+import Highlight, { defaultProps } from "prism-react-renderer"
+import theme from "prism-react-renderer/themes/nightOwlLight"
 
 const Pre = styled.pre`
-  font-size: 0.85em;
-  margin-top: 1.2em;
-  margin-bottom: 1.2em;
+  font-family: var(--font-mono);
+  font-size: 0.75em;
+  margin-top: 2em;
+  margin-bottom: 3em;
+  padding: 1em;
+  border-radius: 4px;
 `
+function CodeBlock({
+  children,
+  className,
+}: {
+  children: string
+  className: string
+}) {
+  return (
+    <Highlight
+      {...defaultProps}
+      code={children.trim()}
+      theme={theme}
+      // @ts-ignore
+      language={className.replace("language-", "")}
+    >
+      {({ className, style, tokens, getLineProps, getTokenProps }) => (
+        <Pre className={className} style={style}>
+          {tokens.map((line, i) => (
+            <div key={i} {...getLineProps({ line, key: i })}>
+              {line.map((token, key) => (
+                <span key={key} {...getTokenProps({ token, key })} />
+              ))}
+            </div>
+          ))}
+        </Pre>
+      )}
+    </Highlight>
+  )
+}
+
 const Container = styled.div`
   width: 80vw;
   max-width: 45rem;
@@ -52,7 +87,12 @@ export default function PostPageLayout({ data: { mdx } }: { data: any }) {
       <Container>
         <Article>
           <PageTitle>{mdx.frontmatter.title}</PageTitle>
-          <MDXProvider components={{ pre: Pre }}>
+          <MDXProvider
+            components={{
+              pre: ({ children }) => children,
+              code: CodeBlock,
+            }}
+          >
             <MDXRenderer>{mdx.body}</MDXRenderer>
           </MDXProvider>
         </Article>
