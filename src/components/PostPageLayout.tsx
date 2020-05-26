@@ -62,8 +62,6 @@ const Article = styled.article`
   font-family: var(--font-serif);
   line-height: var(--line-height);
   p {
-    margin-top: 1em;
-    margin-bottom: 1em;
     code {
       font-size: 0.85em;
     }

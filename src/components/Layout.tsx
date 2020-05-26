@@ -33,6 +33,7 @@ export default ({ children }: { children: React.ReactNode }) => (
         }
         p {
           margin: 1em 0;
+          line-height: var(--line-height);
         }
       `}
     />

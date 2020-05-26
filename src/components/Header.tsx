@@ -60,7 +60,7 @@ export default function Header() {
           <MenuItemLink to="/posts">Posts</MenuItemLink>
         </MenuItem>
         <MenuItem>
-          <MenuItemLink to="/">About</MenuItemLink>
+          <MenuItemLink to="/about">About</MenuItemLink>
         </MenuItem>
       </Menu>
     </Container>
