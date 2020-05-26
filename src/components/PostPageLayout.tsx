@@ -59,6 +59,7 @@ const Article = styled.article`
   }
   h2 {
     font-size: 1em;
+    margin-top: 2em;
   }
   h2,
   h3 {

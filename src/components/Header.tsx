@@ -28,6 +28,10 @@ const RootLink = styled(Link)`
   text-decoration: none;
   display: inline-block;
   margin-bottom: 2em;
+  transition: color 300ms;
+  &:hover {
+    color: var(--dark);
+  }
   @media (max-width: 940px) {
     margin-bottom: 0;
   }

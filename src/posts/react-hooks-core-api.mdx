@@ -1,0 +1,89 @@
+---
+title: The three core React hook features
+slug: /react-hooks-core-api
+date: 2019-05-27
+---
+
+In this post, we'll break down the core React component API and how hooks expose this functionality.
+
+React hooks provide an interface to the backing component instance. Before hooks, there was no way for a [function component](https://reactjs.org/docs/components-and-props.html#function-and-class-components) to communicate with its instance. In class components, you had access to instance variables, `setState`, and lifecycle methods.
+
+There are three fundamental features that React component APIs provide.
+
+- Read and write instance data
+- Schedule render updates
+- Schedule effects
+
+Let's see how these features were represented in class components and now with React hooks.
+
+## Read and write instance data
+
+In class components, instance data was either stored as an instance variable or as part of `this.state`. There is nothing special about instance variables. Class components are just class instances; you can access `this.thing` as you please. `this.state` is just a special instance variable that React is aware of and manages.
+
+With function components, we no longer have access to the component instance (`this`) so we need another API. This is where [`useRef`](https://reactjs.org/docs/hooks-reference.html#useref) comes in. `thingRef.current` is yours to read and write as you please, just like `this.thing` in class components.
+
+```js
+function MyFunctionComponent() {
+  const didMount = useRef(false);
+  useEffect(() => {
+    didMount.current = true;
+  }, []);
+  ...
+}
+
+class MyClassComponent extends React.Component {
+  didMount = false;
+  componentDidMount() {
+    this.didMount = true;
+  }
+  ...
+}
+```
+
+## Schedule a render update
+
+We need a mechanism to trigger rerenders or else we'll left with quite the static application. You could trigger an update by rerendering the root node but that isn't scalable. We need a component API to schedule updates.
+
+In class components, the API was `this.setState` and `this.forceUpdate`. Calling these functions [added an update](https://github.com/facebook/react/blob/5fe97dbe19917b4c49618073ccc5632b593ec9fa/packages/react-reconciler/src/ReactFiberClassComponent.js#L208) to React's internal queue. `this.setState` is actually scheduling two things at the same time, [an update to instance data](https://github.com/facebook/react/blob/5fe97dbe19917b4c49618073ccc5632b593ec9fa/packages/react-reconciler/src/ReactFiberClassComponent.js#L196) and a render update.
+
+Hook [`useState`](https://reactjs.org/docs/hooks-reference.html#usestate) provides the same functionality for function components. More than just scheduling a render update, `useState` manages instance data and avoids rendering [if the new state is equivalent](https://github.com/facebook/react/blob/5fe97dbe19917b4c49618073ccc5632b593ec9fa/packages/react-reconciler/src/ReactFiberHooks.js#L775).
+
+```js
+function useForceUpdate() {
+  const [, setState] = useState(1);
+  return () => setState(x => x + 1);
+}
+
+function MyComponent() {
+  const forceUpdate = useForceUpdate();
+  return <div onClick={forceUpdate} />;
+}
+```
+
+## Schedule effects
+
+Effects are code that change the world outside React. Making a network request, directly mutating a DOM node, and subscribing to Redux updates are effects.
+
+Effect code is written in the class component lifecycle methods `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount`. It's in these methods you access the DOM and mutate the state of the world.
+
+In hook land, we have the reasonably named [`useEffect`](https://reactjs.org/docs/hooks-reference.html#usestate). Lifecycle methods have an iOS callback-style API while `useEffect` reads as a function call, which pushes onto a queue. You can push multiple effects in a single function component render.
+
+[`useLayoutEffect`](https://reactjs.org/docs/hooks-reference.html#uselayouteffect) is another hook for scheduling effects, but synchronous with committing host mutations (DOM updates) like the class lifecycle methods.
+
+## Hook flavors
+
+React core provides a few more hooks for the above functionality.
+
+Preserving referential equality is paramount when working in React. `useEffect` takes [an additional argument](https://reactjs.org/docs/hooks-reference.html#conditionally-firing-an-effect) to decide whether to skip an update.  Similarly, `PureComponent` and `React.memo` rely on referential equality to decide whether to skip a render update.
+
+To help with this, React provides hooks `useMemo` and `useCallback` that return existing values if the same inputs are provided. These fall into the category of reading and writing instance data. In fact, you can implement `useMemo` and `useCallback` on top of `useRef`! I'll leave this as an exercise. (Hint: What are the cached values for a [memoize](https://github.com/reduxjs/reselect/blob/ac77610bbb0a3cab9b280ea5ea379c2387017446/src/index.js#L22-L23) function?)
+
+`useState` and `useReducer` both provide access to instance state and a way to schedule render updates. In fact, `useState` is a [tiny wrapper](https://github.com/facebook/react/blob/5fe97dbe19917b4c49618073ccc5632b593ec9fa/packages/react-reconciler/src/ReactFiberHooks.js#L818) on `useReducer`!
+
+This list isn't comprehensive though others are usually related cousins. For example, `useContext` can be categorized with `setState`, managing state and scheduling render updates across multiple components instead of one.
+
+## Recap
+
+React components are simple when you break it down. In addition to rendering, components schedule updates and effects. They also can hold state, whether stored in React state or instance variables.
+
+These were available before in class components but are now exposed in hooks for function components. As the [hook ecosystem](https://nikgraf.github.io/react-hooks/) grows with useful higher-level hooks, remember it's the core functionality and hooks described here that enable all this power!

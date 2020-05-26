@@ -14,6 +14,9 @@ const PostItem = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  &:last-child {
+    border-bottom: 1px solid #ededed;
+  }
 `
 const PostDate = styled.div`
   font-size: var(--font-size-smaller);

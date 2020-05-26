@@ -1,0 +1,97 @@
+---
+title: Will this work in React Concurrent mode?
+slug: /will-this-work-in-react-concurrent-mode
+date: 2020-02-06
+---
+
+[React Concurrent](https://reactjs.org/docs/concurrent-mode-intro.html) is the exciting next big thing for React. It touts performance benefits and ergonomic ways to implement [render-as-you-fetch](https://reactjs.org/docs/concurrent-mode-suspense.html#approach-3-render-as-you-fetch-using-suspense) applications.
+
+Opting into concurrent mode forces developers to think about React differently than they might have. Existing code that worked fine in today’s React may not work in Concurrent mode.
+
+While React Concurrent mode is not ready for primetime, we have enough information to prepare and make sure our code and patterns support it.
+
+**A component’s render is no longer coupled with a host (DOM) update.**
+
+This is the biggest change to understand to make sure our components work with Concurrent mode. We need to make sure our render functions do not have side effects. This includes operations like updating refs, adding event listeners, and logging.
+
+A render call does not mean that the result will be output to the DOM. The update may not show up for a period of time (could be arbitrarily long) or even ever. We'll see below how this is possible.
+
+## Reactive, the customer support team
+
+To illustrate this, we'll use *Reactive*, a fictional customer support team that uses a React-like API for handling support tickets.
+
+When the Reactive team is ready for more tickets, they call your render function to add your ticket to the queue. When your ticket is resolved, you want to tweet and thank the team.
+
+```javascript
+function MySupportTicket() {
+  // INCORRECT
+  API.tweet("My address is changed! Thanks!");
+  return <Ticket action="changeAddress" city="Venice, CA" />
+}
+```
+
+Most of the time, Reactive is very responsive and processes your ticket immediately. In React, this is equivalent to updating the DOM immediately after render is called. Prior to Concurrent mode, this was how React always worked.
+
+When Reactive got upgraded with concurrent powers, it gained more liberty with when to process support tickets. Reactive may hold off on processing your ticket because there are more urgent tickets to handle. There's no guarantee as to when your ticket will get processed. This is why we need to move the `API.tweet` call into an effect.
+
+```javascript
+function MySupportTicket() {
+  useEffect(() => API.tweet("My address is changed! Thanks!"));
+  return <Ticket action="changeAddress" city="Los Angeles" />
+}
+```
+
+React with Concurrent mode is similar. React can pause work to handle more important updates first. It can also pause work because a component is [suspending](https://reactjs.org/docs/concurrent-mode-suspense.html). This is why it's important to make sure your effects are called from `useEffect` or `useLayoutEffect`.
+
+Here is a [CodeSandbox example](https://codesandbox.io/s/quirky-pascal-fvv96?expanddevtools=1&fontsize=14&hidenavigation=1&theme=dark) of a delayed update. Notice how we're thanking Reactive (see console) before they resolve the ticket. Uh oh.
+
+In fact, Reactive may never process your submitted ticket. Why would they do such a thing?!
+
+## Rendered components may never mount
+
+While you are waiting for your ticket to be resolved, you decide to cancel your ticket. The ticket is no longer needed. In React, this is possible when a new update no longer renders your component. **A component that is rendered may never show up on the screen!** This is why it's dangerous to have side effects in a class component's constructor or render. React may throw away the component and you're left with phantom subscriptions.
+
+Here is a [CodeSandbox example](https://codesandbox.io/s/awesome-agnesi-hvdjt?expanddevtools=1&fontsize=14&hidenavigation=1&theme=dark) where a rendered component is never shown in the DOM. Notice that `<MySupportTicket>` never shows up on the screen even though it is rendered.
+
+## A value logger
+
+Let's put these principles into practice. We want to build a component that console.logs the most recently rendered prop once a second.
+
+```javascript
+// INCORRECT
+function ValueLogger({value}) {
+  // We use a ref here so we can modify the value inside the interval closure
+  const lastValue = useRef(value);
+  lastValue.current = value;
+  useEffect(() => {
+    const interval = setInterval(() => console.log(lastValue.current), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return <div>{value}</div>;
+}
+```
+
+Can you identify the incorrect line?
+
+With Concurrent mode, we can't have side effects in render. They need to be run from `useEffect` or `useLayoutEffect`. This includes updating refs.
+
+```javascript
+function ValueLogger({value}) {
+  const lastValue = useRef(value);
+  useEffect(() => {
+    // React will run this after the DOM shows this update.
+    lastValue.current = value;
+  });
+  useEffect(() => {
+    const interval = setInterval(() => console.log(lastValue.current), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  return <div>{value}</div>;
+}
+```
+
+Without this fix, we may log a value that was never rendered. Using React's [git analogy](https://reactjs.org/docs/concurrent-mode-intro.html#blocking-vs-interruptible-rendering), the component could have been rendered on a branch and was not ready for master.
+
+Hopefully, the customer support analogy helps illustrate how React may decide to delay or throw away render updates. This analogy doesn't hold up all the way. React is not as fickle as a customer support team. Its behavior is predictable. It is just open source code after all.
+
+By guaranteeing render does not have side effects, React gains the power of concurrent mode.

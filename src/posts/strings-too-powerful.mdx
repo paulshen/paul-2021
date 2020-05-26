@@ -1,0 +1,136 @@
+---
+title: Strings are too powerful
+slug: /strings-too-powerful
+date: 2019-06-01
+---
+
+Strings are powerful. They convey text and language. It's the primitive we use to communicate. We share code as strings in text files.
+
+When writing code, we often use strings more than just to represent text. What are these use cases and how can we represent them differently?
+
+## Why not use strings?
+
+Imagine you want to find all the places that people are using the `"primary_dark"` color. When you search your big code base for `"primary_dark"`, the search results may include the following.
+
+```js
+return 'primary_dark';
+```
+
+It's likely that this is the same `"primary_dark"` color you were looking for. However, it's impossible to know for sure without additional context or tracing more code. Worse, imagine the following code.
+
+```js
+const type = isPrimary() ? 'primary' : 'secondary';
+const theme = useDark() ? 'dark' : 'light';
+const color = `${type}_${theme}`;
+```
+
+If you are not aware this code exists, it's almost impossible to find! Strings are too powerful to use as identifiers. They can be concatenated, sliced, uppercased, and more. You don't want your identifiers to have access to these operations.
+
+Strings are global in nature. They can be created out of thin air. Using strings has some of the same pitfalls as using global variables.
+
+Let's take a tour of the many faces of strings and what we can do instead.
+
+### Text
+
+```js
+const message = `Hello ${username}!`;
+<div>{message}</div>
+```
+
+A string used to convey text! This is what strings are made for. No problem here.
+
+### CSS class names
+
+```js
+// Message.css
+.aux {
+  font-size: 12px;
+}
+
+// Message.js
+<div className="aux">
+```
+
+`'aux'` is a string used to reference a CSS class name. This class name could be referenced in a different CSS file! This identifier is represented in the global name space of strings.
+
+SASS takes this farther (in the wrong direction). It's [common practice](https://sass-lang.com/documentation/style-rules/parent-selector#adding-suffixes) to dynamically generate class names, which has the same problem of not being searchable. If you have a class name `Button__red`, try to keep it written out in your code and CSS so you can find all references with a simple text search.
+
+[CSS modules](https://github.com/css-modules/css-modules) is a great solution for representing class names as identifiers. `className={styles.root}` allows the compiler to understand the exact class name you are referencing. It's possible to build tooling to warn when you are referencing invalid class names or when CSS is no longer used.
+
+### Object keys
+
+```js
+const user: User = {
+  firstName: 'tony',
+  lastName: 'stark',
+};
+
+function getName(user: User, position: 'first' | 'last') {
+  return user[position + 'Name'];
+}
+```
+
+This example uses a string to access an object property.
+
+Avoid indexing into objects with a string. Access the property directly. You may need to type more but the benefits of static analysis and searchability are worth it. If you use a type system (like Typescript or Flow), the type checker will be able to compute the return types and catch bugs.
+
+```js
+function getName(user: User, position: 'first' | 'last') {
+  switch (position) {
+  case 'first':
+    return user.firstName;
+  case 'last':
+    return user.lastName;
+  }
+}
+```
+
+### Variants
+
+```js
+type ButtonType = 'primary' | 'secondary' | 'link';
+type ButtonProps = {
+  type: ButtonType,
+};
+```
+
+Strings are often used to represent values for an enum. We often reach for strings because they double as an identifier and are readable. Compare that to using a number, which is more tedious but semantically equivalent. See [ReactWorkTags](https://github.com/facebook/react/blob/0c03a474362c27aa9222ae27088782a01402067c/packages/shared/ReactWorkTags.js#L33-L53).
+
+```js
+const ButtonType = {
+  primary: 1,
+  secondary: 2,
+  link: 3,
+};
+// enums in TypeScript
+
+<Button type={ButtonType.primary}>
+```
+
+The advantage of this over strings is it removes the temptation to use the enum value directly. It is obvious that you should not depend on `3` being the value for the link type, making it more likely people will use the alias `ButtonType.link`.
+
+## Language features
+
+JavaScript has [Symbols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol) to represent identifiers. This removes the global and mutable nature of standalone strings. Other languages have similar, but not identical, constructs. See [Ruby Symbols](https://ruby-doc.org/core-2.5.0/Symbol.html) and [Elixir atoms](https://elixir-lang.org/getting-started/basic-types.html#atoms).
+
+```js
+Symbol('red');
+```
+
+Even better, use a language that has built-in variants. See [Rust enums](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html) and [OCaml variants](http://caml.inria.fr/pub/docs/manual-ocaml/lablexamples.html#sec47). Most ML-inspired languages prevent you from overloading strings. For example, it's impossible to index into records using strings. TypeScript has [enums](https://www.typescriptlang.org/docs/handbook/enums.html) to define a set of constants.
+
+```js
+enum ButtonType {
+  Primary,
+  Secondary,
+  Link
+};
+
+<Button type={ButtonType.Primary} />
+```
+
+If you must use a string as an identifier, treat the string as immutable. Avoid creating strings out of other strings at runtime. Ask yourself the following.
+
+> Without familiarity with the code base, is it easy to find all references **and** be confident that you have found them all?
+
+This may feel tedious and result in more verbose code. But I think you'll find it worth its cost in maintainability.
