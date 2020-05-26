@@ -11,14 +11,16 @@ export default ({ children }: { children: React.ReactNode }) => (
       styles={css`
         :root {
           --font-sans: aktiv-grotesk, sans-serif;
+          --font-serif: freight-text-pro, serif;
           --font-size-default: 18px;
-          --font-line-height: 1.5;
+          --line-height: 1.5;
           --dark: #1e1f20;
           --mid: #8c9194;
           --tan: #f8f3e6;
         }
         body {
           margin: 0;
+          font-size: var(--font-size-default);
         }
       `}
     />

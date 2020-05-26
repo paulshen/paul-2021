@@ -1,6 +1,7 @@
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import React from "react"
+import Header from "../components/Header"
 import Layout from "../components/Layout"
 
 const Container = styled.div`
@@ -20,6 +21,7 @@ const underline = css`
 export default function Home() {
   return (
     <Layout>
+      <Header />
       <Container>
         <h1 css={underline}>Underline</h1>
         <div>Hello world!</div>
