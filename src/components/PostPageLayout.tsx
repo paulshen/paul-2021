@@ -1,10 +1,11 @@
-import React from "react"
-import { graphql } from "gatsby"
-import { MDXProvider } from "@mdx-js/react"
-import { MDXRenderer } from "gatsby-plugin-mdx"
 import styled from "@emotion/styled"
-import Layout from "./Layout"
+import { MDXProvider } from "@mdx-js/react"
+import { graphql } from "gatsby"
+import { MDXRenderer } from "gatsby-plugin-mdx"
+import React from "react"
 import Header from "./Header"
+import Layout from "./Layout"
+import PageTitle from "./PageTitle"
 
 const Pre = styled.pre`
   font-size: 0.85em;
@@ -43,11 +44,6 @@ const Article = styled.article`
     margin-right: auto;
   }
 `
-const Title = styled.h1`
-  font-family: var(--font-sans);
-  margin-top: 2em;
-  margin-bottom: 2em;
-`
 
 export default function PostPageLayout({ data: { mdx } }: { data: any }) {
   return (
@@ -55,7 +51,7 @@ export default function PostPageLayout({ data: { mdx } }: { data: any }) {
       <Header />
       <Container>
         <Article>
-          <Title>{mdx.frontmatter.title}</Title>
+          <PageTitle>{mdx.frontmatter.title}</PageTitle>
           <MDXProvider components={{ pre: Pre }}>
             <MDXRenderer>{mdx.body}</MDXRenderer>
           </MDXProvider>

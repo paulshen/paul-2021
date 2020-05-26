@@ -27,7 +27,7 @@ export default function Header() {
       <RootLink to="/">paul shen</RootLink>
       <Menu>
         <MenuItem>
-          <MenuItemLink to="/">Posts</MenuItemLink>
+          <MenuItemLink to="/posts">Posts</MenuItemLink>
         </MenuItem>
         <MenuItem>
           <MenuItemLink to="/">About</MenuItemLink>
