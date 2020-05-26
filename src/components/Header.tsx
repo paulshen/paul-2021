@@ -3,7 +3,7 @@ import styled from "@emotion/styled"
 
 const Container = styled.div`
   font-family: var(--font-sans);
-  padding: 1.2em 0 0 2em;
+  padding: 2em 0 0 2em;
   position: fixed;
   left: 0;
   top: 0;
@@ -14,6 +14,7 @@ const Container = styled.div`
     align-items: center;
     justify-content: space-between;
     padding-right: 2em;
+    padding-top: 1.2em;
   }
 `
 
@@ -38,6 +39,10 @@ const MenuItem = styled.div`
 const MenuItemLink = styled(Link)`
   text-decoration: none;
   font-size: var(--font-size-smaller);
+  line-height: 1.8;
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export default function Header() {

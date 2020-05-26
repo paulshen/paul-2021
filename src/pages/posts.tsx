@@ -10,19 +10,26 @@ const Body = styled.div`
   max-width: 33rem;
   margin: 0 auto;
 `
-const PostList = styled.ul`
-  list-style: none;
-  padding: 0;
-`
-const PostItem = styled.li`
+const PostList = styled.div``
+const PostItem = styled(Link)`
   border-top: 1px solid #ededed;
-  padding: 1em 0;
-`
-const PostLink = styled(Link)`
   font-family: var(--font-sans);
+  padding: 1em 0;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+`
+const PostDate = styled.div`
+  font-size: var(--font-size-smaller);
+  color: var(--mid);
+  width: 10em;
+`
+const PostTitle = styled.div`
   font-size: var(--font-size-default);
   font-weight: 500;
-  text-decoration: none;
+  ${PostItem}:hover & {
+    text-decoration: underline;
+  }
 `
 
 export default function PostsIndex({
@@ -34,6 +41,7 @@ export default function PostsIndex({
         node: {
           id: string
           frontmatter: {
+            date: string
             title: string
           }
           fields: {
@@ -52,10 +60,9 @@ export default function PostsIndex({
         <PageTitle>Posts</PageTitle>
         <PostList>
           {posts.map(({ node: post }) => (
-            <PostItem key={post.id}>
-              <PostLink to={post.fields.slug}>
-                {post.frontmatter.title}
-              </PostLink>
+            <PostItem to={post.fields.slug} key={post.id}>
+              <PostDate>{post.frontmatter.date}</PostDate>
+              <PostTitle>{post.frontmatter.title}</PostTitle>
             </PostItem>
           ))}
         </PostList>
@@ -66,12 +73,13 @@ export default function PostsIndex({
 
 export const pageQuery = graphql`
   query PostsIndex {
-    allMdx {
+    allMdx(sort: { fields: frontmatter___date, order: DESC }) {
       edges {
         node {
           id
           frontmatter {
             title
+            date(formatString: "MMMM YYYY")
           }
           fields {
             slug

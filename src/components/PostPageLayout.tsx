@@ -15,7 +15,7 @@ const Pre = styled.pre`
   margin-top: 2em;
   margin-bottom: 3em;
   padding: 1em;
-  border-radius: 4px;
+  border-radius: 8px;
 `
 function CodeBlock({
   children,
@@ -79,14 +79,33 @@ const Article = styled.article`
     margin-right: auto;
   }
 `
+const ArticleDate = styled.div`
+  font-family: var(--font-sans);
+  font-size: var(--font-size-smaller);
+  color: var(--mid);
+`
 
-export default function PostPageLayout({ data: { mdx } }: { data: any }) {
+export default function PostPageLayout({
+  data: { mdx },
+}: {
+  data: {
+    mdx: {
+      id: string
+      body: string
+      frontmatter: {
+        title: string
+        date: string
+      }
+    }
+  }
+}) {
   return (
     <Layout>
       <Header />
       <Container>
         <Article>
           <PageTitle>{mdx.frontmatter.title}</PageTitle>
+          <ArticleDate>{mdx.frontmatter.date}</ArticleDate>
           <MDXProvider
             components={{
               pre: ({ children }) => children,
@@ -108,6 +127,7 @@ export const pageQuery = graphql`
       body
       frontmatter {
         title
+        date(formatString: "MMMM DD, YYYY")
       }
     }
   }
