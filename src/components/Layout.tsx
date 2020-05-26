@@ -20,6 +20,7 @@ export default ({ children }: { children: React.ReactNode }) => (
           --line-height: 1.5;
           --dark: #1e1f20;
           --mid: #8c9194;
+          --light: #ededed;
           --tan: #f8f3e6;
           --orange: #dcb98f;
           --blue: #d2e1e9;

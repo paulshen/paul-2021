@@ -18,6 +18,7 @@ const Pre = styled.pre`
   margin-bottom: 3em;
   padding: 1em;
   border-radius: 8px;
+  overflow-x: auto;
 `
 function CodeBlock({
   children,
@@ -72,6 +73,12 @@ const Article = styled.article`
     max-width: 33rem;
     margin-left: auto;
     margin-right: auto;
+  }
+  @media (max-width: 600px) {
+    & > ${Pre} {
+      margin-left: -1em;
+      margin-right: -1em;
+    }
   }
 `
 const ArticleDate = styled.div`

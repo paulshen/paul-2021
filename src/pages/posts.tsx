@@ -8,14 +8,17 @@ import PageTitle from "../components/PageTitle"
 
 const PostList = styled.div``
 const PostItem = styled(Link)`
-  border-top: 1px solid #ededed;
+  border-top: 1px solid var(--light);
   font-family: var(--font-sans);
   padding: 1em 0;
   display: flex;
   align-items: center;
   text-decoration: none;
   &:last-child {
-    border-bottom: 1px solid #ededed;
+    border-bottom: 1px solid var(--light);
+  }
+  @media (max-width: 600px) {
+    display: block;
   }
 `
 const PostDate = styled.div`
