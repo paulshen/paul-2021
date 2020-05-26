@@ -12,5 +12,15 @@ module.exports = {
     },
     "gatsby-plugin-emotion",
     "gatsby-plugin-react-helmet",
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `posts`,
+        path: `${__dirname}/src/posts/`,
+      },
+    },
+    {
+      resolve: "gatsby-plugin-mdx",
+    },
   ],
 }

@@ -1,0 +1,126 @@
+---
+title: ReasonReact hook recipes
+slug: /reason-react-hook-recipes
+---
+
+ReasonReact's 0.7.0 release adds support for React hooks. It took me some googling and reading through [React.re](https://github.com/reasonml/reason-react/blob/5ce8498207ca1f2e9b8305cfca231c837b2d021b/src/React.re) to figure out how to use them all. Here they are in one place with usage examples.
+
+## React context and useContext
+
+This was the least obvious to me but makes sense if you understand what [`[@react.component]`](https://reasonml.github.io/reason-react/docs/en/components#reactcomponent) is doing.
+
+```javascript
+type theme = Dark | Light;
+let themeContext: React.Context.t(theme) = React.createContext(Dark);
+module ThemeProvider = {
+  let makeProps = (~value, ~children, ()) => {
+    "value": value,
+    "children": children,
+  };
+  let make = React.Context.provider(themeContext);
+};
+
+/* provider */
+<ThemeProvider value=Light> children </ThemeProvider>;
+
+/* consumer */
+let make = () => {
+  let theme = React.useContext(themeContext);
+};
+```
+
+## useState
+
+`useState` requires using the lazy initializer and the ````state => `state``` version of `setState`. Without this constraint, Reason can't tell if you are providing a lazy initializer or have state of type `unit => 'a`. The ReasonReact [source](https://github.com/reasonml/reason-react/blob/5ce8498207ca1f2e9b8305cfca231c837b2d021b/src/React.re#L116-L121) says "we know this api isn't great. tl;dr useReducer instead" but I think it's quite usable.
+
+```javascript
+let make = () => {
+  let (value, setValue) = React.useState(() => initialValue);
+
+  /* setValue: (`state => `state) => unit */
+  setValue(oldValue => newValue);
+};
+```
+
+## useReducer
+
+```javascript
+type action = Increment | Decrement;
+let reducer = (state, action) =>
+  switch (action) {
+  | Increment => state + 1
+  | Decrement => state - 1
+  };
+
+let make = () => {
+  let (value, dispatch) = React.useReducer(reducer, 0);
+
+  /* dispatch: `action => unit */
+  dispatch(Increment);
+};
+```
+
+## Dependencies
+
+`useEffect`, `useLayoutEffect`, `useMemo`, `useCallback`, and `useImperativeHandle` take [dependencies](https://reactjs.org/docs/hooks-reference.html#conditionally-firing-an-effect). ReasonReact has distinct APIs for each length of dependencies. The variants are described once here with `useMemo`. The remainder core hooks with deps follow the same pattern.
+
+```javascript
+/* no deps - almost never used */
+React.useMemo(() => []);
+
+/* useHook0 is equivalent to passing [] to deps */
+React.useMemo0(() => []);
+
+/* useHook1 is special in taking a list of deps */
+React.useMemo1(() => [value], [|value|]);
+/* heck you can use for any number of deps */
+React.useMemo1(() => [value1, value2], [|value1, value2|]);
+
+/* useHookN where N > 1 take a N-size tuple */
+React.useMemo2(() => [arg1, arg2], (arg1, arg2));
+React.useMemo3(() => [arg1, arg2, arg3], (arg1, arg2, arg3));
+```
+
+## useEffect, useLayoutEffect
+
+```javascript
+React.useEffect0(() => {
+  Js.log("mount");
+
+  /* must return one of the following */
+  None; /* no unmount */
+  Some(() => Js.log("unmount"));
+});
+```
+
+## useRef
+
+```javascript
+let myRef = React.useRef(initialValue);
+/* getter */
+let value = React.Ref.current(myRef);
+/* setter */
+React.Ref.setCurrent(myRef, newValue);
+```
+
+## forwardRef
+
+```javascript
+module MyInput = {
+  [@react.component]
+  let make = React.forwardRef((~label, ~value, theRef) =>
+    <div>
+      <label> {React.string(label)} </label>
+      <input
+        value
+        ref=?{Belt.Option.map(Js.Nullable.toOption(theRef), ReactDOMRe.Ref.domRef)}
+      />
+    </div>
+  );
+};
+
+let make = () => {
+  let ref = React.useRef(Js.Nullable.null);
+  <MyInput label="Label" value="Value" ref />;
+};
+```
