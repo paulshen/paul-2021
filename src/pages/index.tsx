@@ -3,7 +3,7 @@ import Header from "../components/Header"
 import Layout from "../components/Layout"
 import styled from "@emotion/styled"
 import Img from "gatsby-image"
-import { graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 
 const Body = styled.div`
   width: 80vw;
@@ -47,10 +47,13 @@ export default function Home({ data }: { data: any }) {
         <BodyRight>
           <Paragraph>Hi! I'm Paul.</Paragraph>
           <Paragraph>
-            I'm trying to write more about product engineering, developer tools,
-            React, and other random things that pop in my head.
+            I'm trying to <Link to="/posts">write</Link> more about product
+            engineering, developer tools, React, and other random things that
+            pop in my head.
           </Paragraph>
-          <Paragraph>I also draw squiggly lines.</Paragraph>
+          <Paragraph>
+            I also <Link to="/scribbles">draw</Link> squiggly lines.
+          </Paragraph>
         </BodyRight>
       </Body>
     </Layout>
