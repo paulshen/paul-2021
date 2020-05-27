@@ -27,10 +27,3 @@ client.downloadDir({
     Bucket: "s3.bypaulshen.com",
   },
 })
-client.downloadDir({
-  localDir: `${assetsDirectory}/photos`,
-  s3Params: {
-    Prefix: "photos/",
-    Bucket: "s3.bypaulshen.com",
-  },
-})
