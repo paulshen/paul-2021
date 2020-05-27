@@ -47,11 +47,15 @@ const MenuItem = styled.div`
   }
 `
 const MenuItemLink = styled(Link)`
+  color: var(--mid);
   text-decoration: none;
   font-size: var(--font-size-smaller);
   line-height: 1.8;
   &:hover {
     text-decoration: underline;
+  }
+  ${Menu}:hover & {
+    color: var(--dark);
   }
 `
 
@@ -62,6 +66,9 @@ export default function Header() {
       <Menu>
         <MenuItem>
           <MenuItemLink to="/posts">Posts</MenuItemLink>
+        </MenuItem>
+        <MenuItem>
+          <MenuItemLink to="/scribbles">Scribbles</MenuItemLink>
         </MenuItem>
         <MenuItem>
           <MenuItemLink to="/about">About</MenuItemLink>

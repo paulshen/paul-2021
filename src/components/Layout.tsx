@@ -16,7 +16,7 @@ export default ({ children }: { children: React.ReactNode }) => (
             Menlo, monospace;
           --font-size-default: 18px;
           --font-size-smaller: 0.8em;
-          --font-size-title: 2em;
+          --font-size-title: 1.8em;
           --line-height: 1.5;
           --dark: #1e1f20;
           --mid: #8c9194;

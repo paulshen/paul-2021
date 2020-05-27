@@ -35,7 +35,9 @@
     "react-helmet": "^6.0.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "prettier": "2.0.5",
+    "s3": "^4.4.0",
     "typescript": "^3.9.3"
   },
   "repository": {
@@ -44,5 +46,8 @@
   },
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"
+  },
+  "resolutions": {
+    "graceful-fs": "4.2.3"
   }
 }
