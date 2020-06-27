@@ -1,0 +1,65 @@
+---
+title: VSCodeVim Tips
+slug: /vscode-vim-tips
+date: 2020-06-27
+---
+
+My go-to editor of choice today is VSCode with the [VSCodeVim extension](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim). I won't go into why VSCode and Vim are great 😄. Instead, here are some tips for Vim users in VSCode.
+
+VSCodeVim is a community VSCode plugin that adds good (though not perfect) Vim emulation. It also includes a few popular Vim plugin features. Overall, I'm quite happy with this combination. My main gripes are with performance and responsiveness (compared to Vim) but the extra VSCode features are well worth it for me.
+
+It's worth scrolling through the VSCodeVim [README](https://github.com/VSCodeVim/Vim/blob/master/README.md), which is packed with features. Here are some of my favorites.
+
+## VSCodeVim Tricks
+
+The [VSCodeVim tricks](https://github.com/VSCodeVim/Vim#-vscodevim-tricks) section includes `g d` (go-to definition) and `g h` (show hover tooltip). Note that you can often mix-and-match VSCode shortcuts. For example, I use `⌘ + d` (VSCode shortcut to add next search selection) instead of VSCodeVim's `g b`. I usually follow multiple selections with `c` to change the selections.
+
+Many of VSCode features are built for mouse navigation. Some of these includes `⌘ + click`, `⌥ + ⌘ + click`, etc. With Vim, we want to stay on the keyboard as much as possible. I recommend browsing the [keyboard shortcuts editor](https://code.visualstudio.com/docs/getstarted/keybindings#_keyboard-shortcuts-editor) and adding your own keymaps. One of my favorite commands is `editor.action.revealDefinitionAside`, which opens the definition of the current symbol under your cursor in a split. I map this to `g D`.
+
+```json
+{
+	"vim.normalModeKeyBindings": [
+    {
+      "before": ["g", "D"],
+      "commands": ["editor.action.revealDefinitionAside"]
+    },
+  ]
+}
+```
+
+## Easymotion
+
+VSCodeVim comes with built-in [easymotion](https://github.com/VSCodeVim/Vim#vim-easymotion)! If you're not familiar with the Vim [plugin](https://github.com/easymotion/vim-easymotion), easymotion shows markers for Vim motions, allowing you to jump to a target. The ones I use are search by two characters and start of line forwards and backwards. To turn on this plugin, set the VSCode setting `"vim.easymotion": true`
+
+I use easymotion A LOT, pretty much for any motion that isn't on the same line. I map `s` to easymotion 2 char and `⌃ + j` `⌃ + k` to easymotion line forwards backwards, respectively.
+
+```json
+"vim.normalModeKeyBindingsNonRecursive": [
+	{
+	  "before": ["s"],
+	  "after": ["<leader>", "<leader>", "2", "s"]
+	},
+	{
+	  "before": ["<C-j>"],
+	  "after": ["<leader>", "<leader>", "j"]
+	},
+	{
+	  "before": ["<C-k>"],
+	  "after": ["<leader>", "<leader>", "k"]
+	}
+]
+```
+
+## Semantic selections
+
+Did you know that VSCode has [semantic selections](https://code.visualstudio.com/docs/editor/codebasics#_shrinkexpand-selection)? You can expand and shrink your text selection powered by the language service (e.g. TypeScript). It almost works with VSCodeVim with the caveat that you need to press `v` before inputting your action, even though it already looks like a visual selection.
+
+It's worth noting VSCodeVim has its own expand motion `a f` but it is not semantic. However, it does the right thing 90% of the time and may be worth using as your default because of the tighter integration.
+
+## Surround
+
+[vim-surround](https://github.com/VSCodeVim/Vim#vim-surround) emulation is worth a mention. It provides operations to work with surrounding characters like parentheses, braces, quotes, etc. If you are working on web frontend, it makes it easy to wrap things with XML tags.
+
+`S [desired char]` will wrap your visual selection. A common operation I perform is select a chunk of text in visual mode and then type `S <div>` to wrap it in a div tag (obviously replace with tag of choice). You can even type attributes `S <div className="foo">` but the input is hidden until you close the tag. Similarly, wrap with `S {` `S (` etc.
+
+Editor tips are never comprehensive but I hope you found something to add to your toolkit. [Tell me](https://twitter.com/_paulshen) your favorites!

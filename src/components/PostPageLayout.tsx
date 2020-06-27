@@ -68,6 +68,7 @@ const Article = styled.article`
     font-family: var(--font-sans);
   }
   code {
+    background-color: #f0f0f0;
     font-family: var(--font-mono);
   }
   & > *:not(.full) {
@@ -125,7 +126,6 @@ export default function PostPageLayout({
       >
         <Article>
           <PageTitle>{mdx.frontmatter.title}</PageTitle>
-          <ArticleDate>{mdx.frontmatter.date}</ArticleDate>
           <MDXProvider
             components={{
               pre: ({ children }) => children,
@@ -134,6 +134,7 @@ export default function PostPageLayout({
           >
             <MDXRenderer>{mdx.body}</MDXRenderer>
           </MDXProvider>
+          <ArticleDate>{mdx.frontmatter.date}</ArticleDate>
           <ArticleFooter>
             Browse more <Link to="/posts">posts</Link> or follow on{" "}
             <a href="https://twitter.com/_paulshen" target="_blank">
