@@ -27,6 +27,7 @@ const PostDate = styled.div`
   width: 10em;
 `
 const PostTitle = styled.div`
+  color: var(--dark);
   font-size: var(--font-size-default);
   font-weight: 500;
   ${PostItem}:hover & {

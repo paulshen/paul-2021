@@ -19,6 +19,7 @@ export default ({ children }: { children: React.ReactNode }) => (
           --font-size-title: 1.8em;
           --line-height: 1.5;
           --dark: #1e1f20;
+          --mid-dark: #656a6d;
           --mid: #8c9194;
           --light: #ededed;
           --tan: #f8f3e6;
@@ -30,7 +31,7 @@ export default ({ children }: { children: React.ReactNode }) => (
           margin: 0;
         }
         a {
-          color: var(--dark);
+          color: var(--mid-dark);
         }
         p {
           margin: 1em 0;

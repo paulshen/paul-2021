@@ -1,6 +1,6 @@
 import styled from "@emotion/styled"
 import { MDXProvider } from "@mdx-js/react"
-import { graphql } from "gatsby"
+import { graphql, Link } from "gatsby"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import Highlight, { defaultProps } from "prism-react-renderer"
 import theme from "prism-react-renderer/themes/nightOwlLight"
@@ -88,6 +88,18 @@ const ArticleDate = styled.div`
   color: var(--mid);
 `
 
+const ArticleFooter = styled.div`
+  border-top: 1px solid var(--light);
+  color: var(--mid);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-smaller);
+  margin-top: 4rem;
+  padding-top: 1rem;
+  & > a {
+    color: var(--mid);
+  }
+`
+
 export default function PostPageLayout({
   data: { mdx },
 }: {
@@ -122,6 +134,13 @@ export default function PostPageLayout({
           >
             <MDXRenderer>{mdx.body}</MDXRenderer>
           </MDXProvider>
+          <ArticleFooter>
+            Browse more <Link to="/posts">posts</Link> or follow on{" "}
+            <a href="https://twitter.com/_paulshen" target="_blank">
+              Twitter
+            </a>
+            .
+          </ArticleFooter>
         </Article>
       </Body>
     </Layout>
