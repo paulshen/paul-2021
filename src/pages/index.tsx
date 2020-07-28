@@ -35,7 +35,7 @@ const BodyRight = styled.div`
   }
 `
 const Paragraph = styled.p`
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
 `
 
 export default function Home({ data }: { data: any }) {

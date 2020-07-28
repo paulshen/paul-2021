@@ -29,7 +29,7 @@ const PostDate = styled.div`
 const PostTitle = styled.div`
   color: var(--dark);
   font-size: var(--font-size-default);
-  font-weight: 500;
+  font-weight: 600;
   ${PostItem}:hover & {
     text-decoration: underline;
   }

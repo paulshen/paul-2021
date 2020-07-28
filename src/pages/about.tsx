@@ -6,7 +6,7 @@ import Layout from "../components/Layout"
 import PageTitle from "../components/PageTitle"
 
 const Paragraph = styled.p`
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
 `
 
 export default function Home() {

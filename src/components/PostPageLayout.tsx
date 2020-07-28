@@ -14,7 +14,7 @@ import { Helmet } from "react-helmet"
 
 const Pre = styled.pre`
   font-family: var(--font-mono);
-  font-size: 0.75em;
+  font-size: 0.85em;
   margin-top: 2em;
   margin-bottom: 3em;
   padding: 1em;
@@ -52,13 +52,8 @@ function CodeBlock({
 }
 
 const Article = styled.article`
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   line-height: var(--line-height);
-  p {
-    code {
-      font-size: 0.85em;
-    }
-  }
   h2 {
     font-size: 1em;
     margin-top: 2em;
@@ -72,7 +67,7 @@ const Article = styled.article`
     font-family: var(--font-mono);
   }
   & > *:not(.full) {
-    max-width: 33rem;
+    max-width: 35rem;
     margin-left: auto;
     margin-right: auto;
   }

@@ -50,6 +50,7 @@ const MenuItemLink = styled(Link)`
   color: var(--mid);
   text-decoration: none;
   font-size: var(--font-size-smaller);
+  font-weight: 500;
   line-height: 1.8;
   &:hover {
     text-decoration: underline;
