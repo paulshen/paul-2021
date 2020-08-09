@@ -1,0 +1,249 @@
+---
+title: Comparing Vue and React
+slug: /comparing-vue-and-react
+date: 2020-08-10
+---
+
+As a React developer, I wanted to dive into Vue to learn how it approached building JavaScript UI. How do they differ? Is one better?
+
+I'm using Vue 2 but have also spent some time looking at [Vue 3](https://v3.vuejs.org/). Please call me out on any inaccuracies 🙃
+
+Let's start by looking at their taglines. React is "a declarative, efficient, and flexible JavaScript library for building user interfaces." Vue is "a progressive, incrementally-adoptable JavaScript framework for building UI on the web."
+
+Very similar sentences with a few important differences. Just like the libraries themselves.
+
+## Highlights
+
+- At a high level, the frameworks take similar approaches to the same goal.
+- React is JavaScript-centric vs Vue uses hybrid HTML template/JS.
+- React uses a push update model vs Vue implements reactivity via observing.
+- Vue has more built-in. React is more barebones and relies on community.
+
+## Language approach
+
+Let's jump right in and look at a pretty full-featured component. I'm going ahead with the Vue 3 [composition API](https://v3.vuejs.org/guide/composition-api-introduction.html) because it seems like the direction Vue is heading. There are obvious parallels: the Vue component options API is to React class components as Vue 3 composition API is to React hooks.
+
+```tsx
+// UserProfile.vue
+<div>
+  <div>{{ id }}</div>
+  <Avatar v-if="showAvatar" :id="id" />
+  <UserBody v-if="user" :user="user" />
+  <button @click="$emit('follow-click')">Follow</button>
+</div>
+
+defineComponent({
+  props: {
+    id: { type: String },
+    showAvatar: { type: Boolean },
+  },
+  setup(props) {
+    const {id} = toRefs(props);
+    const user = ref(undefined);
+    function updateUser() {
+      fetchUser(id.value).then(data => {
+        user.value = data;
+      });
+    }
+    onMounted(updateUser);
+    watch(id, updateUser);
+    return {user};
+  }
+})
+```
+
+```tsx
+// React
+function UserProfile({id, showAvatar, onFollowClick}: {
+  id: string,
+  showAvatar: boolean,
+  onFollowClick: () => void,
+}) {
+  const [user, setUser] = React.useState(undefined);
+  React.useEffect(() => {
+    fetchUser(id).then(setUser);
+  }, [id]);
+
+  return (
+    <div>
+      <div>{id}</div>
+      {showAvatar ? <Avatar id={id} /> : null}
+      {user !== undefined ? <UserBody user={user} /> : null}
+      <button onClick={onFollowClick}>Follow</button>
+    </div>
+  );
+}
+```
+
+I used to be quite allergic to HTML templates (e.g. mustache) because of their loose run-time nature. Back in the day, it was a bunch of string manipulation. However, in Vue (and Svelte and other modern frameworks), templates are processed at build-time into JavaScript. You can use [Vue Template Explorer](https://vue-next-template-explorer.netlify.app/) to see how Vue templates transpile to JavaScript.
+
+React's JSX is just sugar for JavaScript.
+
+In a way, you could also say that Vue's templates are also JavaScript sugar. However, the transform is more involved and Vue-specific.
+
+If you use React hooks, React components are just functions. All the logic lives inside this function. Vue separates the component definition from the template (or [render function](https://v3.vuejs.org/guide/render-function.html)). Using the new Composition API above, the component definition is inside one `setup` function. This is a notable difference; React hooks are run on every render but `setup` is only run once on initialization. Vue sets up listeners (lifecycle and reactive values) whereas React specifies effects on each render.
+
+One advantage of Vue's template syntax is that because it is more restrictive, the compiler is able to perform more optimizations, such as separating out static template content to avoid rerenders. React can do something similar with a [Babel plugin](https://babeljs.io/docs/en/babel-plugin-transform-react-constant-elements) but this is not common. Theoretically, I believe Vue could make more optimizations from template syntax.
+
+A disadvantage with Vue templates is that there are times when JavaScript's expressiveness is [sorely missed](https://v3.vuejs.org/guide/render-function.html#render-functions) or even necessary. In those cases, Vue recommends using a `render` function, either via the more verbose `createElement` or JSX. An example I ran into is wanting a local variable inside a template loop. Translating between Vue template and JSX is a manual process. I think you probably need to be familiar with both template and JSX to be a Vue developer, in which case React's one approach seems better.
+
+### Event Handling
+
+Event handling is another example of the differing language approach. React has no special syntax; it's just JavaScript functions. Vue provides syntax for listening to and emitting events.
+
+```tsx
+// MyVueComponent
+<button @click="$emit('increment')">Increment</button>
+
+<MyVueComponent @increment="methodName" />
+
+// MyReactComponent
+<button onClick={props.onIncrement}>Increment</button>
+
+<MyReactComponent onIncrement={jsFunction} />
+```
+
+You can see here the differing approaches to events. React passes a JavaScript function to the component. Vue components emit events, which are identified as strings with associated data.
+
+### Static analysis
+
+At a high level, React is better suited for static analysis, such as TypeScript. Its JavaScript-centric approach puts it closer to the language so most editor/tooling just works. I set up VSCode with Vetur (Vue's recommended tooling) and didn't get semantic langauge features (e.g. checking, autocomplete, go to definition) inside the Vue template. Note: I found Vetur has an experimental setting for "Template Interpolation Service" which adds a lot of these features but it still misses features like find references.
+
+Some Vue features like named slots, events, and their props (React children equivalent) are too dynamic for full static analysis. For example, components can emit custom events but there isn't an obvious way to write out that contract.
+
+Vue provides a global namespace although it is not always recommended. For example, you can register components by name to the global namespace. [Vue plugins](https://v3.vuejs.org/guide/plugins.html) can inject global methods, properties, and mixins. Global namespaces, while convenient at times, play less nicely with tooling and scalable codebases.
+
+## Update model
+
+The biggest functional difference between Vue and React is how they handle updates. Vue uses observables (via JavaScript `Proxies` or `defineProperty`) to implement reactivity. In short, it modifies data to track when properties are read or written. This allows for fine-grained dependency tracking; Vue knows which properties have been read so it can rerender and update views only when those properties change. This is smarter than a stock `React.memo`, which compares equality for all props.
+
+In comparison, React uses a push update model. Rerenders are triggered by a function call somewhere (state update or reducer dispatch). When a React component updates, it will rerender all its children as well.
+
+```tsx
+// MyVueComponent
+<button @click="count += 1">{{ count }}</button>
+
+Vue.extend({
+  data: {
+    count: 0
+  }
+})
+
+function MyReactComponent() {
+  const [count, setCount] = React.useState(0);
+  return <button onClick={() => setCount(count => count + 1)}>{count}</button>;
+}
+```
+
+The way I think of Vue's update model is as if all components were wrapped in `React.memo` and the equality function was a dynamic one that compared only props/state that were used on the last render.
+
+Vue's update model is a lot like [MobX](https://mobx.js.org/). Your atoms are your props/data and you can also have computed properties. Note: Vue currently rerenders whenever data underlying a computed property changes, even if the computed property itself does not change. This feature would be really nice as this is hard to express in React using `React.useMemo` without creating a wrapper component.
+
+Out-of-the-box, Vue performs more granular updates so Vue updates are more performant by default. Of course, React has `React.memo` but that requires understanding of closures and when to use `React.useMemo` and `React.useCallback`. Vue isn't off the hook though. Reactivity via injecting observables comes with [its](https://v3.vuejs.org/guide/reactivity-fundamentals.html#destructuring-reactive-state) [gotchas](https://v3.vuejs.org/guide/composition-api-introduction.html#reactive-variables-with-ref).
+
+## API surface area
+
+It's hard for me to be objective because I have a lot more familiarity with the React API. However, I still feel that React has a smaller API and fewer React-specific concepts to learn (ignoring concurrent mode and time-slicing).
+
+A number of things are more convenient in Vue. Here are a few examples.
+
+### v-model
+
+Vue has sugar for two-way data binding. It's quite nice.
+
+```tsx
+// MyVueComponent
+<div>
+  <input v-model="message" />
+  <p>{{ message }}</p>
+</div>
+
+Vue.extend({
+  data: {
+    message: ''
+  }
+})
+```
+
+The following is quoted from the [React docs](https://reactjs.org/docs/two-way-binding-helpers.html): In React, data flows one way: from owner to child. We think that this makes your app’s code easier to understand. You can think of it as “one-way data binding.”
+
+```tsx
+function MyReactComponent() {
+  const [message, setMessage] = React.useState('');
+  return (
+    <div>
+      <input value={message} onChange={e => setMessage(e.target.value} />} />
+      <p>{message}</p>
+    </div>
+  );
+}
+```
+
+### Combining class names
+
+Vue has special `class` and `style` handling. These properties get merged and also handle object maps and arrays.
+
+```tsx
+// MyVueComponent
+<div :class="my-class-name">Hello</div>
+
+<MyVueComponent :class="{ active: isActive }" />
+```
+
+This is more tedious with React. There is nothing special about `className`. Most people use a third-party library (like `classnames`).
+
+```tsx
+function MyReactComponent({className}) {
+  return <div className={'my-class-name ' + className}>Hello</div>;
+}
+
+<MyReactComponent className={isActive ? 'active' : ''} />
+```
+
+### Reactivity
+
+I will add a mention here for Vue's reactivity. I found it magical but pleasant to use.
+
+```tsx
+<button @click="count += 1">{{ count }}</button>
+
+defineComponent({
+  reset() {
+    // This causes rerender
+    this.count = 0;
+  }
+})
+```
+
+The fact that mutating what looks like a local variable causes a rerender is still a little beyond my comfort zone 🙂
+
+## Vue as a framework
+
+React pitches itself as a **library** and Vue as a **framework**. The line is blurry but Vue does more out-of-the-box than React. Vue has transitions and animations built-in. It has blessed libraries for routing and state management (vuex).
+
+React, as in the core React, focuses on only the rendering layer. The other pieces are provided by the ecosystem, which fortunately, is very vibrant.
+
+With my limited experience, bootstrapping an app feels about the same both with `vue-cli` and `create-react-app`. I like Vue [Single File Components](https://vuejs.org/v2/guide/single-file-components.html), which allows you to define component-scoped CSS in the same file as the template and component logic.
+
+## Not too different
+
+While I've been spending time on the differences, they have many similarities. They are both web UI view libraries and a lot of the concepts map from one to the other.
+
+- Both use virtual DOM and support JSX
+- Vue slots and React children
+- Vue props/data and React props/state
+- Vue teleport and React portal
+
+## Which one should you use?
+
+You probably expected this coming but I'm not going to give you a definite answer. It depends! You can be successful and productive with either one.
+
+If you are a stickler for correctness and love type systems (which I am one), you will probably prefer React. It works better with TypeScript and has a purer language approach. Vue has a global namespace (although you can mostly avoid it) but features like custom events, plugins, and mixins embrace the dynamic nature of JS. For this reason, I would favor React in complex apps in large codebases with many engineers.
+
+If you like the idea of starting with HTML/static content and sprinkling on JavaScript, then you might like Vue's template approach. Many websites really are of this nature, static content with some interactivity.
+
+For developers less familiar with JavaScript, Vue is probably easier to get started with. Templates are intuitive and are incrementally adoptable. You don't need to think about rerendering and data-binding is easy to understand. This isn't to say that you can't build complex apps with Vue. If you spend a lot of time with JavaScript, you might like React's more pure language approach.
+
+Finally, it's hard to ignore React's mass adoption and large ecosystem. For companies, React would be the less risky choice. More engineers have React experience than Vue experience; hiring will likely be easier. Also, there are more alternative React render targets, like React Native, that you may find useful.
+
+At the end of the day, you can be productive with both frameworks. I personally still prefer React but I can't say it's strictly better.
