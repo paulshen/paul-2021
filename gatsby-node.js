@@ -1,4 +1,5 @@
 const { createFilePath } = require("gatsby-source-filesystem")
+const MonacoWebpackPlugin = require(`monaco-editor-webpack-plugin`)
 const path = require("path")
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -39,5 +40,11 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       component: path.resolve(`./src/components/PostPageLayout.tsx`),
       context: { id: node.id },
     })
+  })
+}
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    plugins: [new MonacoWebpackPlugin()],
   })
 }
