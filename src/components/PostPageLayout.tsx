@@ -119,7 +119,7 @@ export default function PostPageLayout({
       <Header />
       <Body
         css={css`
-          max-width: 45rem;
+          max-width: none;
         `}
       >
         <Article>

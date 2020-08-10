@@ -4,6 +4,8 @@ slug: /comparing-vue-and-react
 date: 2020-08-10
 ---
 
+import CodeSideBySide from '../components/CodeSideBySide';
+
 As a React developer, I wanted to dive into Vue to learn how it approached building JavaScript UI. How do they differ? Is one better?
 
 I'm using Vue 2 but have also spent some time looking at [Vue 3](https://v3.vuejs.org/). Please call me out on any inaccuracies 🙃
@@ -22,6 +24,8 @@ Very similar sentences with a few important differences. Just like the libraries
 ## Language approach
 
 Let's jump right in and look at a pretty full-featured component. I'm going ahead with the Vue 3 [composition API](https://v3.vuejs.org/guide/composition-api-introduction.html) because it seems like the direction Vue is heading. There are obvious parallels: the Vue component options API is to React class components as Vue 3 composition API is to React hooks.
+
+<CodeSideBySide>
 
 ```tsx
 // UserProfile.vue
@@ -75,17 +79,21 @@ function UserProfile({id, showAvatar, onFollowClick}: {
 }
 ```
 
+</CodeSideBySide>
+
 I used to be quite allergic to HTML templates (e.g. mustache) because of their loose run-time nature. Back in the day, it was a bunch of string manipulation. However, in Vue (and Svelte and other modern frameworks), templates are processed at build-time into JavaScript. You can use [Vue Template Explorer](https://vue-next-template-explorer.netlify.app/) to see how Vue templates transpile to JavaScript.
 
 React's JSX is just sugar for JavaScript.
 
 In a way, you could also say that Vue's templates are also JavaScript sugar. However, the transform is more involved and Vue-specific.
 
-If you use React hooks, React components are just functions. All the logic lives inside this function. Vue separates the component definition from the template (or [render function](https://v3.vuejs.org/guide/render-function.html)). Using the new Composition API above, the component definition is inside one `setup` function. This is a notable difference; React hooks are run on every render but `setup` is only run once on initialization. Vue sets up listeners (lifecycle and reactive values) whereas React specifies effects on each render.
+### Pros and Cons
 
 One advantage of Vue's template syntax is that because it is more restrictive, the compiler is able to perform more optimizations, such as separating out static template content to avoid rerenders. React can do something similar with a [Babel plugin](https://babeljs.io/docs/en/babel-plugin-transform-react-constant-elements) but this is not common. Theoretically, I believe Vue could make more optimizations from template syntax.
 
 A disadvantage with Vue templates is that there are times when JavaScript's expressiveness is [sorely missed](https://v3.vuejs.org/guide/render-function.html#render-functions) or even necessary. In those cases, Vue recommends using a `render` function, either via the more verbose `createElement` or JSX. An example I ran into is wanting a local variable inside a template loop. Translating between Vue template and JSX is a manual process. I think you probably need to be familiar with both template and JSX to be a Vue developer, in which case React's one approach seems better.
+
+If you use React hooks, React components are just functions. All the logic lives inside this function. Vue separates the component definition from the template (or [render function](https://v3.vuejs.org/guide/render-function.html)). Using the new Composition API above, the component definition is inside one `setup` function. This is a notable difference; **React hooks are run on every render but `setup` is only run once on initialization**. Vue sets up listeners (lifecycle and reactive values) whereas React specifies effects on each render.
 
 ### Event Handling
 
