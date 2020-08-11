@@ -75,20 +75,20 @@ export default function PostsIndex({
 }
 
 export const pageQuery = graphql`
-  query PostsIndex {
-    allMdx(sort: { fields: frontmatter___date, order: DESC }) {
-      edges {
-        node {
-          id
-          frontmatter {
-            title
-            date(formatString: "MMMM YYYY")
-          }
-          fields {
-            slug
-          }
+query PostsIndex {
+  allMdx(filter: {fields: {pane: {ne: true}}}, sort: {fields: frontmatter___date, order: DESC}) {
+    edges {
+      node {
+        id
+        frontmatter {
+          title
+          date(formatString: "MMMM YYYY")
+        }
+        fields {
+          slug
         }
       }
     }
   }
+}
 `

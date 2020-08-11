@@ -22,7 +22,7 @@ export default function Editor() {
     async function run() {
       const monaco = await importMonaco()
       monaco.editor.create(domRef.current!, {
-        value: ["function x() {", '\tconsole.log("Hello world!");', "}"].join(
+        value: ["function f() {", '\tconsole.log("Hello world!");', "}"].join(
           "\n"
         ),
         language: "typescript",

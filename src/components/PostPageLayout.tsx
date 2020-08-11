@@ -1,55 +1,13 @@
+import { css } from "@emotion/core"
 import styled from "@emotion/styled"
-import { MDXProvider } from "@mdx-js/react"
 import { graphql, Link } from "gatsby"
-import { MDXRenderer } from "gatsby-plugin-mdx"
-import Highlight, { defaultProps } from "prism-react-renderer"
-import theme from "prism-react-renderer/themes/nightOwlLight"
 import React from "react"
+import { Helmet } from "react-helmet"
 import Body from "./Body"
 import Header from "./Header"
 import Layout from "./Layout"
+import MDXBody, { Pre } from "./MDXBody"
 import PageTitle from "./PageTitle"
-import { css } from "@emotion/core"
-import { Helmet } from "react-helmet"
-
-const Pre = styled.pre`
-  font-family: var(--font-mono);
-  font-size: 0.85em;
-  margin-top: 2em;
-  margin-bottom: 3em;
-  padding: 1em;
-  border-radius: 8px;
-  overflow-x: auto;
-`
-function CodeBlock({
-  children,
-  className,
-}: {
-  children: string
-  className: string
-}) {
-  return (
-    <Highlight
-      {...defaultProps}
-      code={children.trim()}
-      theme={theme}
-      // @ts-ignore
-      language={className.replace("language-", "")}
-    >
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <Pre className={className} style={style}>
-          {tokens.map((line, i) => (
-            <div key={i} {...getLineProps({ line, key: i })}>
-              {line.map((token, key) => (
-                <span key={key} {...getTokenProps({ token, key })} />
-              ))}
-            </div>
-          ))}
-        </Pre>
-      )}
-    </Highlight>
-  )
-}
 
 const Article = styled.article`
   font-family: var(--font-sans);
@@ -124,14 +82,7 @@ export default function PostPageLayout({
       >
         <Article>
           <PageTitle>{mdx.frontmatter.title}</PageTitle>
-          <MDXProvider
-            components={{
-              pre: ({ children }) => children,
-              code: CodeBlock,
-            }}
-          >
-            <MDXRenderer>{mdx.body}</MDXRenderer>
-          </MDXProvider>
+          <MDXBody>{mdx.body}</MDXBody>
           <ArticleDate>{mdx.frontmatter.date}</ArticleDate>
           <ArticleFooter>
             Browse more <Link to="/posts">posts</Link> or follow on{" "}
