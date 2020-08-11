@@ -3,6 +3,7 @@ import { MDXProvider } from "@mdx-js/react"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import Highlight, { defaultProps } from "prism-react-renderer"
 import theme from "prism-react-renderer/themes/nightOwlLight"
+import * as React from "react"
 
 export const Pre = styled.pre`
   font-family: var(--font-mono);
@@ -45,13 +46,15 @@ function CodeBlock({
 }
 
 export default function MDXBody({ children }: { children: string }) {
+  const components = React.useMemo(
+    () => ({
+      pre: ({ children }: { children: any }) => children,
+      code: CodeBlock,
+    }),
+    []
+  )
   return (
-    <MDXProvider
-      components={{
-        pre: ({ children }) => children,
-        code: CodeBlock,
-      }}
-    >
+    <MDXProvider components={components}>
       <MDXRenderer>{children}</MDXRenderer>
     </MDXProvider>
   )

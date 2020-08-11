@@ -3,42 +3,13 @@ import styled from "@emotion/styled"
 import { graphql, Link } from "gatsby"
 import React from "react"
 import { Helmet } from "react-helmet"
+import Article from "./Article"
 import Body from "./Body"
 import Header from "./Header"
 import Layout from "./Layout"
-import MDXBody, { Pre } from "./MDXBody"
+import MDXBody from "./MDXBody"
 import PageTitle from "./PageTitle"
 
-const Article = styled.article`
-  font-family: var(--font-sans);
-  line-height: var(--line-height);
-  h2 {
-    font-size: 1.4em;
-    margin-top: 2em;
-  }
-  h3 {
-    font-size: 1em;
-  }
-  h2,
-  h3 {
-    font-family: var(--font-sans);
-  }
-  code {
-    background-color: #f0f0f0;
-    font-family: var(--font-mono);
-  }
-  & > *:not(.full) {
-    max-width: 35rem;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  @media (max-width: 600px) {
-    & > ${Pre} {
-      margin-left: -1em;
-      margin-right: -1em;
-    }
-  }
-`
 const ArticleDate = styled.div`
   font-family: var(--font-sans);
   font-size: var(--font-size-smaller);

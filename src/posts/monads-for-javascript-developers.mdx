@@ -1,0 +1,507 @@
+---
+title: Monads for JavaScript developers
+slug: /monads-for-javascript-developers
+date: 2020-08-11
+---
+
+import { PostPaneLink } from "../components/PostPane"
+import { EditorPaneLink } from "../components/EditorPane"
+
+Why are there so many monad articles and tutorials?
+
+Because people like me keep writing them. Part of it is due to the <PostPaneLink mdxId="monad-tutorial-fallacy">Monad tutorial fallacy</PostPaneLink>. Nonetheless, I hope this gives you a gist of what monads are and why people care about them.
+
+Try clicking this dashed underline link above; it will open in a pane. If you are on a computer, you'll find some interactive exercises below as well.
+
+I imagine you are familiar with the almighty JavaScript and have encountered types before, maybe with TypeScript or Flow. If not, the code examples should still be intelligible. No Haskell experience required!
+
+# Building intuition with JavaScript
+
+Let's pretend for a moment that JavaScript is a pure language and <PostPaneLink mdxId="side-effects">side-effects</PostPaneLink> are not allowed in functions.
+
+```tsx
+function increment(x: number): number {
+  console.log('incrementing'); // side effect not allowed!
+  return x + 1;
+}
+```
+
+How can we implement something similar to `console.log` without side effects? Maybe we could wrap the return value to include a string.
+
+```tsx
+function incrementWithLog(x: number): [number, string] {
+  return [x + 1, 'incrementing\n'];
+}
+
+function main() {
+  const valueWithLog = incrementWithLog(0);
+  const [value, log] = valueWithLog;
+  // value = 1
+  // log = 'incrementing\n'
+}
+```
+
+Notice how we've created a context around the original value. Where we started with `increment` returning a `number`, `incrementWithgLog` now returns a "tuple" `[number, string]` where the `string` represents the log message. Let's call this context `WithLog<T>` as `[T, string]` where `T` could be any type. In this example, `incrementWithLog` returns a `WithLog<number>`, with `T` being the `number`.
+
+What if we want to use this function multiple times?
+
+```tsx
+function main() {
+  const initialValue = 0;
+  // smooth sailing with the original increment without log
+  return increment(increment(increment(initialValue)));
+}
+
+function mainWithLog() {
+  const initialValue = 0;
+  // each incrementWithLog includes a log
+  const [result1, log1] = incrementWithLog(initialValue);
+  const [result2, log2] = incrementWithLog(result1);
+  const [result3, log3] = incrementWithLog(result2);
+  return [result3, log1 + log2 + log3];
+}
+```
+
+This is okay but there's extra work with dealing with the log message. We need to destructure each return value. We can't just chain calls nicely like we can with `increment`. If we're working with a lot of `WithLog` values, is there a way we make it easier to work with?
+
+Let's introduce a couple new functions. The first is `wrap`, which takes a plain old value and puts it in our context with `''`, representing an empty log.
+
+```tsx
+type WithLog<T> = [T, string];
+
+// Put a value into the context
+function wrap<T>(value: T): WithLog<T> {
+  return [value, ''];
+}
+```
+
+Our second function `bind` is more complicated. It takes two arguments, a  `WithLog<T>` value and a function with type `T => WithLog<T>`.
+
+```tsx
+// Apply a given function to a context value
+function bind<T>(
+  valueWithLog: WithLog<T>,
+  f: T => WithLog<T>
+): WithLog<T> {
+  const [value, existingLog] = valueWithLog;
+  const [newValue, newLog] = f(value);
+  return [newValue, existingLog + newLog];
+}
+```
+
+It calls the given function with the value inside the existing context. It then concats the log strings together to form the new log. You can think of it like appending the new log message onto the existing logs.
+
+Now, it's now your turn. <EditorPaneLink codeId="with-log-monad">Open this exercise</EditorPaneLink> and try implementing `mainWithLog` again using both `wrap` and `bind`.
+
+```tsx
+function mainWithLog() {
+  const initialValueWithLog = wrap(0);
+  const r1 = bind(initialValueWithLog, incrementWithLog);
+  const r2 = bind(r1, incrementWithLog);
+  return bind(r2, incrementWithLog);
+}
+
+// This is identical but on one line.
+function mainWithLog2() {
+  return bind(bind(bind(wrap(0), incrementWithLog), incrementWithLog), incrementWithLog);
+}
+```
+
+`mainWithLog2` looks a lot like our original `main` without logs! Note that there isn't any code dealing with the log messages. `wrap` and `bind` take care of that for us.
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b01e8416-17f8-4b07-9da0-16c6ebeb9718/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b01e8416-17f8-4b07-9da0-16c6ebeb9718/Untitled.png)
+
+You might notice that both `incrementWithLog` and `wrap` are both valid parameters to the second argument of `bind`.
+
+## Quick recap
+
+And there you go! We just made our own `WithLog` monad. We haven't formalized any of this yet but I hope you have an idea of what monads **feel like**.
+
+We have a context type `WithLog<T> = [T, string]` that augments a value with a string representing log messages. We also defined two functions for working with `WithLog`. `wrap` puts a value in the `WithLog` context. `bind` applies a function `T => WithLog<T>` to a context value `WithLog<T>` to get another context value `WithLog<T>`.
+
+## Why?
+
+Why learn monads? Honestly, because they are known to be hard to learn and that in itself is kinda fun, right? Probably the same reason why I feel compelled to write yet another tutorial.
+
+Are monads useful to a JavaScript developer?
+
+Probably not? I personally don't think monads are that useful for JavaScript developers. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
+
+### Haskell
+
+**TL;DR** Any real Haskell program requires the use of monads.
+
+Monads are usually associated with Haskell because they form the building blocks for writing programs. In the example above, we pretended that we couldn't have side effects inside functions. *This is actually true in Haskell!* You can't add `console.log` inside your function.
+
+The core Haskell programming language doesn't have many "features" that you take for granted in other languages. In JavaScript, you can have side effects anywhere. In JavaScript, global and module state is easy.
+
+In most functional programming languages, you don't have imperative statements like you do in popular programming languages like JavaScript, Java, Python, etc. Instead, everything is an expression. In Haskell, the `IO` monad gives programmers the ability to sequence effectful actions. For example, `putStr` (the `console.log` equivalent) has type `String -> IO ()`.
+
+Again, this is not a Haskell tutorial but the high-level picture is that combining monads allows Haskell programmers to add "features" to their programming environment. Our `WithLog` monad adds the feature of logging strings. You can think of monads as "computational context". Haskell programmers get to (have to?) pick and choose what programming features to use.
+
+### Notes
+
+In Haskell, our `wrap` function is called `return`. It's extremely confusing hence why I introduce it as `wrap` in this article. Just know that this is not the real name.
+
+The function (second arg) given to `bind` can return a context value with another embedded type. `bind` has the type `(M<T>, T => M<U>) => M<U>`. I restricted `U = T` in the `bind` example above to reduce the number of type variables. For example, we can do the following.
+
+```tsx
+function isEvenWithLog(x: number): WithLog<boolean> {
+  return [x % 2 === 0, 'called isEven\n'];
+}
+
+function mainWithLog(x: number): WithLog<boolean> {
+  return bind(bind(wrap(x), incrementWithLog), isEvenWithLog);
+}
+```
+
+This is the updated visualization for `bind`.
+
+![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d53a3660-2754-403b-9835-bdf5740002b6/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d53a3660-2754-403b-9835-bdf5740002b6/Untitled.png)
+
+If you wanted to stop here, I don't blame you. Thanks for sticking it this far! If you like this sort of content, check out my Twitter. The rest of the article defines monads more precisely and gives you more content to understand monads.
+
+# What is a Monad exactly?
+
+Now, that we have interacted with monads, let's get serious and get more precise. Monad is a type class that is defined in Haskell as the following.
+
+```haskell
+class Applicative m => Monad m where
+  return :: a -> m a
+  (>>=)  :: m a -> (a -> m b) -> m b
+```
+
+***Huh?*** This isn't a tutorial on Haskell; we want to learn as little Haskell as we need to understand monads. We'll break down the relevant pieces.
+
+Monad is a type class with kind `* -> *`. ***HUH?!?***
+
+JavaScript/TypeScript does not have type classes but you can think of them like interfaces. The kind part in non-Haskell speak means monads are **generic types with exactly one type parameter**. If you're familiar with a type system like TypeScript, monads roughly speaking look like `M<A>` where `M` is the monad and `A` is the one type parameter. For example, `Array<A>` has the structure to be a potential monad.
+
+Let's translate the Haskell definition above into loose TypeScript. I've replaced `return` with `wrap` because `return` is a restricted JavaScript keyword. The `>>=` symbol is `bind`.
+
+```tsx
+interface MonadImplementation<M<_>> {
+  wrap: <A>(A) => M<A>,
+  bind: <A, B>(M<A>, A => M<B>) => M<B>,
+}
+```
+
+TypeScript doesn't have type classes so the first line is fake TypeScript. We're saying that `M` is a monad, not a specific `M<A>` (like `M<number>`).
+
+Let's revisit our `WithLog` context. Here, we plug in our implementation for `wrap` and `bind`.
+
+```tsx
+type WithLog<T> = [T, string];
+
+const WithLogMonadImplementation: MonadImplementation<WithLog> = {
+  wrap: <A>(x: A): WithLog<A> => [x, ''],
+  bind: <A, B>(m: WithLog<A>, f: A => WithLog<B>) => {
+    const [value, log] = m;
+    const [newValue, newLog] = f(value);
+    return [newValue, log + newLog];
+  },
+};
+```
+
+This is the implementation of our JavaScript `WithLog` monad.
+
+## Maybe Monad
+
+The best way to understand monads is to implement one (or a couple). Let's try doing so for the `Maybe` type.
+
+This is a generic type representing a potentially missing value. For example, `Maybe<number>` could either be a `{value: number}` or `undefined`. Why didn't I just use `T | undefined`?
+
+```tsx
+type Maybe<T> = { value: T } | undefined;
+```
+
+ Try implementing `wrap` and `bind`.
+
+```tsx
+function wrap<T>(v: T): Maybe<T> {
+  //
+}
+
+function bind<T, U>(v: Maybe<T>, f: T => Maybe<U>): Maybe<U> {
+  //
+}
+```
+
+```tsx
+function wrap<T>(v: T): Maybe<T> {
+  return { value: v };
+}
+
+function bind<T, U>(v: Maybe<T>, f: T => Maybe<U>): Maybe<U> {
+  if (v === undefined) {
+    return undefined;
+  }
+  return f(v.value);
+}
+```
+
+For `bind`, if the given value is `undefined`, we don't even call the given function. Otherwise, we call the given function, which will return us another `Maybe` value. We'll get `undefined` if either the initial value is `undefined` or the function returns one.
+
+You can think of `Maybe` as a "computational context" representing "failure". If you have a sequence of computations and any of them fails, we want the whole sequence to fail.
+
+[use maybe example]
+
+# "Trivia"
+
+We’ll keep formalizing what monads are but if this is feeling tedious, remember that these concepts are definitely not necessary in JavaScript!
+
+## Monad Laws
+
+Just because you have function implementations that satisfy the types, that isn’t enough to call it a monad. It also needs to satisfy a few rules so they act predictably.
+
+```tsx
+// left identity
+bind(wrap(x), f) = f(x)
+// right identity
+bind(m, wrap) = m
+// associativity
+bind(bind(m, f), g) = bind(m, x => bind(f(x), g))
+```
+
+I won't go into too much detail here but we can see that our `WithLog` and `Maybe` monads satisfy these laws.
+
+## do notation
+
+Because monads are so common in Haskell, there is special syntax sugar to make the code nicer. Let's revisit our `WithLog` example above.
+
+```tsx
+function mainWithLog2() {
+  const initialValueWithLog = wrap(0);
+  return bind(bind(bind(initialValueWithLog, incrementWithLog), incrementWithLog), incrementWithLog);
+}
+```
+
+Not the prettiest looking code. This is the equivalent using Haskell do notation. The arrows are `bind`. Remember `return` is our `wrap`.
+
+```haskell
+do
+  r0 <- return 0
+  r1 <- incrementWithLog r0
+  r2 <- incrementWithLog r1
+  incrementWithLog r2
+```
+
+This makes it a little more clear why the function is called `bind`. We're taking a context value and calling the function with the value - binding the value to the function parameter.
+
+## Join
+
+An equivalent way to think of monads is the ability to collapse multiple layers of context. We're smashing two "computational contexts" into one.
+
+```tsx
+join: M<M<A>> => M<A>
+```
+
+Take our `WithLog` type. We can define a function `join` that takes two layers `WithLog<WithLog<A>>` and return one `WithLog<A>`.
+
+```tsx
+function join<T>(m: WithLog<WithLog<T>>): WithLog<T> {
+  const [innerValueWithLog, outerLog] = m;
+  const [value, innerLog] = innerValueWithLog;
+  return [value, outerLog + innerLog];
+}
+```
+
+This is another way of thinking about a monad. Combined with `fmap`, we can recreate `bind`.
+
+```tsx
+// This is a function with type (M<T>, T => U) => M<U>
+// applies the given function inside the context
+function fmap<T, U>(m: WithLog<T>, f: T => U): WithLog<U> {
+  const [value, log] = m;
+  return [f(value), log];
+}
+
+// Then we get
+bind(m, f) = join(fmap(m, f))
+```
+
+## Further Reading
+
+I’d like a shot to teach you about Monads. I won’t be the first or the last.
+
+This article will use TypeScript syntax and assume familiarity with types and generics. I sprinkle in this fake syntax when the idea is hard to express in pure TypeScript. When expressing a TypeScript function type, I omit the argument name. `f: A => B` instead of `f: (a: A) => B`
+
+My goal is to optimize this tutorial for accessibility and building intuition. Brevity is not a goal. Monads were not trivial for me to understand so I could not teach them to you in 5 minutes.
+
+This tutorial is also a playground for me to try teaching ideas. Try clicking this!
+
+## Mapping
+
+Let's do a little mental warmup before diving in. Mapping applies a given function to the values inside a structure. The structure stays the same.
+
+```tsx
+const toString = (n: number) => `${n}`
+arrayMap: (Array<A>, A => B) => Array<B>
+arrayMap([], toString) => []
+arrayMap([1,2,3], toString) => ["1", "2", "3"]
+```
+
+Mapping over a list of length 0 returns a list of length 0. Mapping over a list of length 3 returns a list of length 3.
+
+Let's introduce a type `Maybe<A>`, which represents a potentially missing value.
+
+```tsx
+type Maybe<A> = { value: A } | undefined;
+const a: Maybe<number> = { value: 3 };
+const b: Maybe<number> = undefined;
+
+optionMap: (Maybe<A>, A => B) => Maybe<B>;
+optionMap({ value: 3 }, toString) => { value: "3" }
+optionMap(undefined, toString) => undefined
+```
+
+Mapping over a defined value returns a defined value. Mapping over an undefined value returns undefined.
+
+Let's get started!
+
+## The Type World
+
+We'll begin by differentiating between two parallel worlds, the **value** world and **type** world.
+
+```tsx
+3: number
+```
+
+The value world is where values like `3` and `"hello"` exist. Each value has a type. `3` is a `number` and `"hello"` is a `string`. I like to think of the value world as the real world and type world as a parallel reality where everything is labeled.
+
+Values and types are linked but you can't cross worlds.
+
+## `T<A>`
+
+Let's meditate on `T<A>`. We can say that `T` is a type that takes one type parameter `A`. `A` can be any type so `T` can't make any assumptions about what `A` can or can't do. We saw a few examples above with `Array<A>` and `Maybe<A>`.
+
+`T` is said to be a "computational context". `T` is a container of another type **in the type world**. Remember that this is different than the value world! A value of type `T<A>` may not have any `A` inside it. Or it could have multiple `A`s.
+
+```tsx
+type WeirdNumber<A> = number;
+const x: WeirdNumber<string> = 3; // No A (string) here!
+
+type Double<A> = [A, A];
+const x: Double<string> = ["a", "b"]; // Two A (string) here
+
+type Returns<A> = (n: number) => A;
+const x: Returns<string> = (n: number) => `${n}`; // There's kinda an A (string) here?
+```
+
+This was the hardest part for me to gain intuition. `T<A>` is a box around `A` in the type world, not in the value world. If you are used to a programming like JavaScript or Python, you spend most of your time in the value world. Some of this understanding came to me after spending time with the concepts and working through examples. Look at the `Returns<A>` type. If visualizing a box becomes counter-productive (as it did for me), I explode the box into a "context", a nebulous environment where `A`s might appear.
+
+## Typeclasses
+
+Typeclasses don't exist in TypeScript but we'll use interfaces to illustrate the point. [deepdive]
+
+```tsx
+interface Greetable<T> {
+  greet: (T) => string,
+}
+
+type Person = {
+  name: string,
+};
+
+const PersonGreetable: Greetable<Person> = {
+  greet: (p: Person) => "hello " + p.name,
+};
+```
+
+We can also have interfaces for types with generics. This is not supported in TypeScript but we'll pretend it is.
+
+```tsx
+interface Combineable<T<_>> {
+  combine: <A>(T<A>, T<A>) => T<A>
+}
+
+const ArrayCombineable: Combineable<Array<_>> = {
+  combine: <A>(a: Array<A>, b: Array<A>) => {
+    return a.concat(b);
+  }
+};
+```
+
+In this example, we implemented `Combineable` for `Array`. Note that `Array<T>` is a type that has one type parameter. We can call `ArrayCombineable.combine()` with any two arrays as long as they have the same type. `ArrayCombineable.combine([1,2,3], [4,5,6])` is okay but `ArrayCombineable.combine([1,2,3], [true, false])` is not.
+
+[deep dive into kind]
+
+Monad is a typeclass!
+
+## The Monad typeclass
+
+```tsx
+interface Monad<M<_>> {
+  pure: <A>(A) => M<A>,
+  bind: <A, B>(M<A>, A => M<B>) => M<B>,
+}
+```
+
+Oooooooooooooof that's a lot of `M`s and `A`s and `B`s and brackets and parentheses. Let's break it down.
+
+Monad is a typeclass so for a type to be a Monad, it needs to provide an implementation with the methods `pure` and `bind`.
+
+### Pure
+
+`pure: <A>(A) => M<A>`
+
+`pure` takes a value of type `A` and returns a value of type `M<A>`.
+
+This is usually a pretty simple function. We're taking a value and putting it into the `M` context.
+
+### Bind
+
+`bind: <A, B>(M<A>, A => M<B>) => M<B>`
+
+The argument is a `M<A>`, a context around an `A` value.
+
+The second argument is `A => M<B>`, a function that takes an `A` value and returns a `M` context around a value of type `B`. Note that `A` and `B` can be the same.
+
+The return value is `M<B>`, which is the same type as the return value of the given function.
+
+Let's mess with `Maybe<A>` to get a feel for these definitions. If we plug in `Maybe` for `M`, we get the following.
+
+```tsx
+{
+  pure: <A>(A) => Maybe<A>,
+  bind: <A, B>(Maybe<A>, A => Maybe<B>) => Maybe<B>,
+}
+```
+
+Try filling in the blanks!
+
+```tsx
+const MaybeMonad = {
+  pure: <A>(a: A): Maybe<A> => {
+    return { value: a };
+  },
+  bind: <A, B>(ma: Maybe<A>, f: (a: A) => Maybe<B>): Maybe<B> => {
+    if (ma === undefined) {
+      // If the first value we're given is undefined, there's nothing to apply f to
+      return undefined;
+    }
+    // Otherwise, we can apply f, which will return another Maybe value.
+    return f(ma.value);
+  },
+};
+```
+
+With this implementation, we've made our `Maybe<A>` a Monad! Let's try using it.
+
+```tsx
+MaybeMonad.pure(3) => { value: 3 }
+MaybeMonad.bind({ value: 3 }, x => ({ value: toString(x) })) => { value: "3" }
+MaybeMonad.bind({ value: 3 }, x => undefined) => undefined
+MaybeMonad.bind(undefined, x => ({ value: x })) => undefined
+```
+
+Notice that the first argument and return value of `bind` are both `Maybe`. We can chain `bind` calls together.
+
+## The Monad Laws
+
+## Outline
+
+- Log example
+- Typeclass
+
+[Notes](https://www.notion.so/Notes-4389af3750e94e93af7ceff6292a7ad1)

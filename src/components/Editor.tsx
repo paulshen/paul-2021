@@ -4,8 +4,9 @@ import * as React from "react"
 async function importMonaco(): Promise<typeof import("monaco-editor")> {
   const monaco = await import("monaco-editor")
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-    noLib: true,
-    target: monaco.languages.typescript.ScriptTarget.ES2016,
+    target: monaco.languages.typescript.ScriptTarget.ES5,
+    lib: ["es5"],
+    module: monaco.languages.typescript.ModuleKind.ES2015,
     allowNonTsExtensions: true,
   })
   monaco.languages.typescript.typescriptDefaults.addExtraLib(
@@ -16,16 +17,24 @@ declare var console: Console;`,
   return monaco
 }
 
-export default function Editor() {
+export default function Editor({
+  modelId,
+  initialCode,
+}: {
+  modelId: string
+  initialCode: string
+}) {
   const domRef = React.useRef<HTMLDivElement | null>(null)
   React.useEffect(() => {
     async function run() {
       const monaco = await importMonaco()
+      const uri = monaco.Uri.parse(`/${modelId}.tsx`)
+      let model = monaco.editor.getModel(uri)
+      if (model == null) {
+        model = monaco.editor.createModel(initialCode, "typescript", uri)
+      }
       monaco.editor.create(domRef.current!, {
-        value: ["function f() {", '\tconsole.log("Hello world!");', "}"].join(
-          "\n"
-        ),
-        language: "typescript",
+        model,
         minimap: {
           enabled: false,
         },
@@ -36,7 +45,7 @@ export default function Editor() {
   return (
     <div
       css={css`
-        height: 400px;
+        flex-grow: 1;
       `}
       ref={domRef}
     ></div>
