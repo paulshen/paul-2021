@@ -13,6 +13,7 @@ module.exports = {
     },
     "gatsby-plugin-emotion",
     "gatsby-plugin-react-helmet",
+    "gatsby-remark-autolink-headers",
     {
       resolve: "gatsby-source-filesystem",
       options: {
@@ -29,6 +30,9 @@ module.exports = {
     },
     {
       resolve: "gatsby-plugin-mdx",
+      options: {
+        gatsbyRemarkPlugins: ["gatsby-remark-autolink-headers"],
+      },
     },
     {
       resolve: "gatsby-source-filesystem",

@@ -29,6 +29,7 @@
     "gatsby-plugin-react-helmet": "^3.3.2",
     "gatsby-plugin-sharp": "^2.6.9",
     "gatsby-plugin-typescript": "^2.4.3",
+    "gatsby-remark-autolink-headers": "^2.3.11",
     "gatsby-source-filesystem": "^2.3.8",
     "gatsby-transformer-sharp": "^2.5.3",
     "prism-react-renderer": "^1.1.1",
