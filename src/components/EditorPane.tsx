@@ -14,7 +14,7 @@ function wrap<T>(value: T): WithLog<T> {
 // Apply a given function to a context value
 function bind<T>(
   valueWithLog: WithLog<T>,
-  f: (value: T) => WithLog<T>
+  f: (x: T) => WithLog<T>
 ): WithLog<T> {
   const [value, existingLog] = valueWithLog;
   const [newValue, newLog] = f(value);
@@ -29,6 +29,15 @@ export function mainWithLog() {
   // Starting with 0, call incrementWithLog 3 times
   // Be sure to use wrap and bind
 
+}`,
+  "monad-maybe": `type Maybe<T> = { value: T } | undefined;
+
+function wrap<T>(v: T): Maybe<T> {
+  // Implement this
+}
+
+function bind<T, U>(v: Maybe<T>, f: (x: T) => Maybe<U>): Maybe<U> {
+  // Implement this
 }`,
 }
 

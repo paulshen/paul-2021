@@ -1,0 +1,31 @@
+# Join
+
+An equivalent way to think of monads is the ability to collapse multiple layers of context. We're smashing two "computational contexts" into one.
+
+```tsx
+join: M<M<A>> => M<A>
+```
+
+Take our `WithLog` type. We can define a function `join` that takes two layers `WithLog<WithLog<A>>` and return one `WithLog<A>`.
+
+```tsx
+function join<T>(m: WithLog<WithLog<T>>): WithLog<T> {
+  const [innerValueWithLog, outerLog] = m;
+  const [value, innerLog] = innerValueWithLog;
+  return [value, outerLog + innerLog];
+}
+```
+
+This is another way of thinking about a monad. Combined with `fmap`, we can recreate `bind`.
+
+```tsx
+// This is a function with type (M<T>, T => U) => M<U>
+// applies the given function inside the context
+function fmap<T, U>(m: WithLog<T>, f: T => U): WithLog<U> {
+  const [value, log] = m;
+  return [f(value), log];
+}
+
+// Then we get
+bind(m, f) = join(fmap(m, f))
+```

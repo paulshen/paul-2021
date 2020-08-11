@@ -1,0 +1,14 @@
+# Monad Laws
+
+There are three monad laws. Two are identity laws and the third is associativity.
+
+```tsx
+// left identity
+bind(wrap(x), f) = f(x)
+// right identity
+bind(m, wrap) = m
+// associativity
+bind(bind(m, f), g) = bind(m, x => bind(f(x), g))
+```
+
+I won't go into too much detail here but we can see that our `WithLog` and `Maybe` monads satisfy these laws.

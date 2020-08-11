@@ -1,0 +1,22 @@
+# Do notation
+
+Because monads are so common in Haskell, there is special syntax sugar to make the code nicer. Let's revisit our `WithLog` example above.
+
+```tsx
+function mainWithLog2() {
+  const initialValueWithLog = wrap(0);
+  return bind(bind(bind(initialValueWithLog, incrementWithLog), incrementWithLog), incrementWithLog);
+}
+```
+
+Not the prettiest looking code. This is the equivalent using Haskell do notation. The arrows are `bind`. Remember `return` is our `wrap`.
+
+```haskell
+do
+  r0 <- return 0
+  r1 <- incrementWithLog r0
+  r2 <- incrementWithLog r1
+  incrementWithLog r2
+```
+
+This makes it a little more clear why the function is called `bind`. We're taking a context value and calling the function with the value - binding the value to the function parameter.

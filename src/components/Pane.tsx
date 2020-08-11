@@ -63,6 +63,7 @@ export default function Pane({
         css={css`
           background-color: var(--dark);
           height: 32px;
+          flex-shrink: 0;
           display: flex;
           align-items: center;
           justify-content: space-between;
