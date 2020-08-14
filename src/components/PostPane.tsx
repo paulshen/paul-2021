@@ -56,6 +56,9 @@ export default function PostPane({
           css={css`
             overflow: auto;
             padding: 32px 64px;
+            @media (max-width: 640px) {
+              padding: 16px;
+            }
           `}
         >
           {React.createElement(mdxContent, { components: mdxComponents })}

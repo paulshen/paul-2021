@@ -1,6 +1,7 @@
 import * as React from "react"
 import { css } from "@emotion/core"
 import { Pre } from "./MDXBody"
+import { EditorPaneButton } from "./EditorPane"
 
 export function PostExerciseInlineCode({
   children,
@@ -19,8 +20,10 @@ export function PostExerciseInlineCode({
 }
 
 export default function PostExercise({
+  codeId,
   children,
 }: {
+  codeId: string
   children: React.ReactNode[]
 }) {
   const body = children.slice(0, children.length - 1)
@@ -55,6 +58,7 @@ export default function PostExercise({
         {body}
       </div>
       <div>
+        <EditorPaneButton codeId={codeId} />
         <button
           onClick={() => {
             setShowSolution(show => !show)
@@ -66,6 +70,7 @@ export default function PostExercise({
             color: var(--dark);
             font-size: var(--font-size-smaller);
             padding: 0.5em 0.9em;
+            margin-left: 1em;
           `}
         >
           {!showSolution ? "Show" : "Hide"} Solution

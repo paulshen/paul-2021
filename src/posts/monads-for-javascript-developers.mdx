@@ -5,7 +5,6 @@ date: 2020-08-11
 ---
 
 import { PostPaneLink } from "../components/PostPane"
-import { EditorPaneLink } from "../components/EditorPane"
 import PostExercise, { PostExerciseInlineCode } from "../components/PostExercise"
 import CodeSideBySide from '../components/CodeSideBySide';
 
@@ -13,7 +12,7 @@ Why are there so many monad articles and tutorials? Because people like me keep 
 
 Maybe it's because of the <PostPaneLink mdxId="monad-tutorial-fallacy">monad tutorial fallacy</PostPaneLink>. Anyways, I hope this gives you, a JavaScript developer, a gist of what monads are and why people care about them.
 
-Try clicking <PostPaneLink mdxId="monad-pane">this dashed link</PostPaneLink>. It will open a pane, as will the other dashed links. If you are at a computer (recommended), you'll find some interactive exercises as well.
+This article is also a small experiment. Try clicking <PostPaneLink mdxId="monad-pane">this dashed link</PostPaneLink>. It will open a pane, as will the other dashed links. If you are at a computer (recommended), you'll find some interactive exercises as well.
 
 I imagine you are familiar with the almighty JavaScript and have encountered types before, maybe with TypeScript or Flow. If not, the code examples should still be intelligible. No Haskell experience required!
 
@@ -93,8 +92,8 @@ function bind<T>(
 
 It calls the given function with the value inside the existing context. It then concats the log strings together to form the new log. You can think of it as appending the new log message onto existing logs.
 
-<PostExercise>
-Now it's your turn. <EditorPaneLink codeId="with-log-monad">Open this exercise</EditorPaneLink> and try implementing <PostExerciseInlineCode>runWithLog</PostExerciseInlineCode> using both <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode>.
+<PostExercise codeId="with-log-monad">
+Now it's your turn. Open this exercise and try implementing <PostExerciseInlineCode>runWithLog</PostExerciseInlineCode> using both <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode>.
 
 ```tsx
 function runWithLog() {
@@ -211,8 +210,8 @@ type Maybe<T> = { value: T } | undefined;
 
 This is a generic type representing potential failure. For example, `Maybe<number>` could either be a `{ value: number }` or `undefined` (failure!). <PostPaneLink mdxId="monad-maybe-type">Why don't we just use `T | undefined`?</PostPaneLink>
 
-<PostExercise>
-Exercise time! Try <EditorPaneLink codeId="monad-maybe">implementing <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode></EditorPaneLink> for <PostExerciseInlineCode>Maybe</PostExerciseInlineCode>.
+<PostExercise codeId="monad-maybe">
+Try implementing <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode> for <PostExerciseInlineCode>Maybe</PostExerciseInlineCode>.
 
 ```tsx
 function wrap<T>(v: T): Maybe<T> {

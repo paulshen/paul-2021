@@ -41,29 +41,25 @@ function bind<T, U>(v: Maybe<T>, f: (x: T) => Maybe<U>): Maybe<U> {
 }`,
 }
 
-export function EditorPaneLink({
-  codeId,
-  children,
-}: {
-  codeId: string
-  children: React.ReactNode
-}) {
+export function EditorPaneButton({ codeId }: { codeId: string }) {
   const [showPane, setShowPane] = React.useState(false)
   return (
     <>
-      <a
-        href="#"
+      <button
         onClick={e => {
-          setShowPane(true)
-          e.preventDefault()
+          setShowPane(show => !show)
         }}
         css={css`
-          text-decoration: none;
-          border-bottom: 1px dashed var(--mid-dark);
+          background-color: transparent;
+          border-radius: 4px;
+          border: 1px solid var(--dark);
+          color: var(--dark);
+          font-size: var(--font-size-smaller);
+          padding: 0.5em 0.9em;
         `}
       >
-        {children}
-      </a>
+        {!showPane ? "Open" : "Close"} exercise
+      </button>
       {showPane ? (
         <EditorPane codeId={codeId} onClose={() => setShowPane(false)} />
       ) : null}

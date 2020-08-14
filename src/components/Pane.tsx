@@ -55,12 +55,30 @@ export default function Pane({
         border-radius: 4px;
         overflow: hidden;
         width: 640px;
+        max-width: 95vw;
         height: 600px;
+        max-height: 90vh;
         bottom: 100px;
         right: 100px;
         display: flex;
         flex-direction: column;
         box-shadow: 0 8px 32px #00000040;
+
+        @media (max-height: 760px) {
+          bottom: 32px;
+        }
+
+        @media (max-width: 840px) {
+          bottom: 32px;
+          right: 32px;
+        }
+
+        @media (max-width: 640px) {
+          height: 90vh;
+          max-height: 600px;
+          bottom: 0;
+          right: 0;
+        }
       `}
       ref={rootRef}
     >
