@@ -25,7 +25,7 @@ function incrementWithLog(x: number): [number, string] {
   return [x + 1, 'incrementing\\n'];
 }
 
-export function mainWithLog() {
+export function runWithLog() {
   // Starting with 0, call incrementWithLog 3 times
   // Be sure to use wrap and bind
 

@@ -7,3 +7,18 @@ Equivalently, we would not be able to express the equivalent of the following va
 ```
 
 In normal TypeScript code, the idea of `Maybe` is represented as `T | undefined`.
+
+```tsx
+function parseStringToColor(input: string): Color | undefined {
+  switch (input) {
+    case 'red':
+      return Color.Red;
+    case 'green':
+      return Color.Green;
+    case 'blue':
+      return Color.Blue;
+    default:
+      return undefined;
+  }
+} 
+```

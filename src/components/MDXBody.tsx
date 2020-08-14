@@ -2,7 +2,7 @@ import styled from "@emotion/styled"
 import { MDXProvider } from "@mdx-js/react"
 import { MDXRenderer } from "gatsby-plugin-mdx"
 import Highlight, { defaultProps } from "prism-react-renderer"
-import theme from "prism-react-renderer/themes/nightOwlLight"
+import theme from "prism-react-renderer/themes/palenight"
 import * as React from "react"
 
 export const Pre = styled.pre`

@@ -16,7 +16,12 @@ export default function Pane({
   const rootRef = React.useRef<HTMLDivElement>(null)
   const rootOffset = React.useRef([0, 0])
   const cleanupDrag = React.useRef<() => void>()
+  const closeButtonRef = React.useRef<HTMLDivElement>(null)
   function onHeaderMouseDown(e: React.MouseEvent) {
+    if (closeButtonRef.current!.contains(e.target as Element)) {
+      return
+    }
+
     const startPageX = e.pageX
     const startPageY = e.pageY
     const [offsetX, offsetY] = rootOffset.current
@@ -80,7 +85,9 @@ export default function Pane({
         >
           {title}
         </div>
-        <button onClick={onClose}>Close</button>
+        <button onClick={onClose} ref={closeButtonRef}>
+          Close
+        </button>
       </div>
       {children}
     </div>,
