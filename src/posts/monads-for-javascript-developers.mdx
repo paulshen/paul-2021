@@ -6,6 +6,7 @@ date: 2020-08-11
 
 import { PostPaneLink } from "../components/PostPane"
 import { EditorPaneLink } from "../components/EditorPane"
+import PostExercise, { PostExerciseInlineCode } from "../components/PostExercise"
 
 Why are there so many monad articles and tutorials? Because people like me keep writing them 😎
 
@@ -91,7 +92,8 @@ function bind<T>(
 
 It calls the given function with the value inside the existing context. It then concats the log strings together to form the new log. You can think of it as appending the new log message onto existing logs.
 
-Now, it's your turn. <EditorPaneLink codeId="with-log-monad">Open this exercise</EditorPaneLink> and try implementing `runWithLog` using both `wrap` and `bind`.
+<PostExercise>
+Now it's your turn. <EditorPaneLink codeId="with-log-monad">Open this exercise</EditorPaneLink> and try implementing <PostExerciseInlineCode>runWithLog</PostExerciseInlineCode> using both <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode>.
 
 ```tsx
 function runWithLog() {
@@ -106,8 +108,9 @@ function runWithLog2() {
   return bind(bind(bind(wrap(0), incrementWithLog), incrementWithLog), incrementWithLog);
 }
 ```
+</PostExercise>
 
-`runWithLog2` looks a lot like our original `run` with just `increment`! There isn't any code dealing with the log messages. `wrap` and `bind` take care of that for us. **We don't even have to know how `WithLog` is implemented.** We know it's a tuple from above but that can change without affecting our implementation of `runWithLog`.
+View the solution. `runWithLog2` looks a lot like our original `run` with just `increment`! There isn't any code dealing with the log messages. `wrap` and `bind` take care of that for us. **We don't even have to know how `WithLog` is implemented.** We know it's a tuple from above but that can change without affecting our implementation of `runWithLog`.
 
 ## Quick recap
 
@@ -207,8 +210,8 @@ type Maybe<T> = { value: T } | undefined;
 
 This is a generic type representing potential failure. For example, `Maybe<number>` could either be a `{ value: number }` or `undefined` (failure!). <PostPaneLink mdxId="monad-maybe-type">Why don't we just use `T | undefined`?</PostPaneLink>
 
-Exercise time! Try <EditorPaneLink codeId="monad-maybe">implementing `wrap` and `bind`</EditorPaneLink> for `Maybe`.
-
+<PostExercise>
+Exercise time! Try <EditorPaneLink codeId="monad-maybe">implementing <PostExerciseInlineCode>wrap</PostExerciseInlineCode> and <PostExerciseInlineCode>bind</PostExerciseInlineCode></EditorPaneLink> for <PostExerciseInlineCode>Maybe</PostExerciseInlineCode>.
 
 ```tsx
 function wrap<T>(v: T): Maybe<T> {
@@ -222,6 +225,7 @@ function bind<T, U>(v: Maybe<T>, f: T => Maybe<U>): Maybe<U> {
   return f(v.value);
 }
 ```
+</PostExercise>
 
 `wrap` is straightforward; it puts the given value into the `Maybe` context. If the given value to `bind` is `undefined` (failure), we just continue failing by returning `undefined`. Otherwise, we call the given function, which will return us another `Maybe` value. Note that calling function `f` might "fail" and return an `undefined`.
 

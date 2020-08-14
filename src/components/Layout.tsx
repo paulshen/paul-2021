@@ -25,11 +25,15 @@ export default ({ children }: { children: React.ReactNode }) => (
           --tan: #f8f3e6;
           --orange: #dcb98f;
           --blue: #d2e1e9;
+          --white: #ffffff;
           font-size: var(--font-size-default);
         }
         body {
           margin: 0;
           -webkit-font-smoothing: antialiased;
+        }
+        button, input, textarea {
+          font-family: var(--font-sans);
         }
         a {
           color: var(--mid-dark);
