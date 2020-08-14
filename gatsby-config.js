@@ -29,13 +29,6 @@ module.exports = {
       },
     },
     {
-      resolve: "gatsby-source-filesystem",
-      options: {
-        name: "posts-pane",
-        path: `${__dirname}/src/posts-pane/`,
-      },
-    },
-    {
       resolve: "gatsby-plugin-mdx",
       options: {
         gatsbyRemarkPlugins: ["gatsby-remark-autolink-headers"],
