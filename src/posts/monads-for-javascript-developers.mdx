@@ -7,10 +7,11 @@ date: 2020-08-11
 import { PostPaneLink } from "../components/PostPane"
 import { EditorPaneLink } from "../components/EditorPane"
 import PostExercise, { PostExerciseInlineCode } from "../components/PostExercise"
+import CodeSideBySide from '../components/CodeSideBySide';
 
 Why are there so many monad articles and tutorials? Because people like me keep writing them 😎
 
-Maybe it's because of the <PostPaneLink mdxId="monad-tutorial-fallacy">Monad tutorial fallacy</PostPaneLink>. Anyways, I hope this gives you, a JavaScript developer, a gist of what monads are and why people care about them.
+Maybe it's because of the <PostPaneLink mdxId="monad-tutorial-fallacy">monad tutorial fallacy</PostPaneLink>. Anyways, I hope this gives you, a JavaScript developer, a gist of what monads are and why people care about them.
 
 Try clicking <PostPaneLink mdxId="monad-pane">this dashed link</PostPaneLink>. It will open a pane, as will the other dashed links. If you are at a computer (recommended), you'll find some interactive exercises as well.
 
@@ -124,7 +125,7 @@ Honestly? Because they're known to be hard to learn and that itself is kinda fun
 
 Are monads useful to a JavaScript developer?
 
-Probably not? I personally don't think monads are that useful for JavaScript developers. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
+Probably not? I personally don't think monads are that useful in JavaScript. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
 
 ### Haskell
 
@@ -154,7 +155,7 @@ function runWithLog(x: number): WithLog<boolean> {
 }
 ```
 
-If you wanted to stop here, I don't blame you. Thanks for sticking it this far! The rest of the article defines monads more precisely and gives you more context to understand monads.
+If you wanted to stop here, I don't blame you. Thanks for sticking this far! The rest of the article defines monads more precisely and gives you more context to understand monads.
 
 # What is a Monad exactly?
 
@@ -263,7 +264,49 @@ function main(userId: string): Maybe<number>  {
 
 We're sequencing three functions here: `getUser`, `getProfileColor` and `parseColorHex`. If anything fails (returns `undefined`), the entire sequence will fail (return `undefined`).
 
-# Good to know
+# Comparing to `fmap`
+
+The idea of `fmap` is more common function in JavaScript. I'm going to skip some Haskell details but let's meditate on the following function.
+
+```tsx
+map: (M<A>, A => B) => M<B>
+
+// A common example
+arrayMap: (Array<A>, A => B) => Array<B>
+```
+
+`map` applies a function to values inside a context value. The most common operation is mapping over an array. Here's `map` for `Maybe`. I'm putting it side-by-side with `bind`.
+
+<CodeSideBySide>
+
+```tsx
+function maybeMap<A>(m: Maybe<A>, f: A => B): Maybe<B> {
+  if (m === undefined) {
+    return undefined;
+  }
+  return {
+    value: f(m.value);
+  }
+}
+```
+
+```tsx
+function maybeBind<A>(m: Maybe<A>, f: A => Maybe<B>): Maybe<B> {
+  if (m === undefined) {
+    return undefined;
+  }
+  return f(m.value);
+}
+```
+</CodeSideBySide>
+
+### Spot the differences
+
+They're so similar. The heart of the comparison is the type of `f`, the function parameter. The `f` for `map` returns `B` whereas `map` for `bind` returns `Maybe<B>`.
+
+If you pass in a `{value}` to `map`, you're definitely getting a `{value}` back (never `undefined`). However, `bind`'s given function has the power to return `undefined`. `bind`'s `f` has the ability to modify the "structure" of the context value. In a way, you can think of monad's `bind` as more powerful than `map`.
+
+# Nice to know
 
 We’ll keep formalizing what monads are but if this is feeling tedious, remember that these concepts are not necessary in JavaScript!
 
@@ -271,10 +314,19 @@ Just satisfying the types is not enough to call it a monad. It also needs to sat
 
 Because working with monads is so common in Haskell, there is syntactic sugar called <PostPaneLink mdxId="monad-do-notation">do notation</PostPaneLink>.
 
-Another way to think about monads is via <PostPaneLink mdxId="monad-join">`join`</PostPaneLink>, a way to smash two "computational contexts" into one. For example, `WithLog<WithLog<T>> => WithLog<T>`. 
+Another way to think about monads is with <PostPaneLink mdxId="monad-join">`join`</PostPaneLink>, a way to smash two "computational contexts" into one. For example, `WithLog<WithLog<T>> => WithLog<T>`. 
+
+# Recap
+
+A monad is a generic type that implement `wrap` and `bind`. They might be overhyped but they are essential in some programming languages, most notably Haskell. Monads enable side effects and allow sequencing actions in a pure functional programming language.
+
+Please send any feedback or [follow me](https://twitter.com/_paulshen) on twitter if you want more content like this 🙏
 
 ## Links
 
-If you want to learn more about monads and type classes (yay!), here are some links that I found useful.
+If you want to learn more about monads and type classes, here are some links that I found useful.
 
 - [Typeclassopedia](https://wiki.haskell.org/Typeclassopedia) - I highly recommend the Instances and Intuition sections under Monad, which helped me build my understanding for monads.
+- [You Could Have Invented Monads!](http://blog.sigfpe.com/2006/08/you-could-have-invented-monads-and.html) - I took a lot of inspiration (copied/translated to JavaScript?) from this great monad tutorial.
+- [Comprehending Monads](https://ncatlab.org/nlab/files/WadlerMonads.pdf) - Philip Wadler's original paper on monads
+- [Monads are burritos](https://chrisdone.com/posts/monads-are-burritos/) - A comic about monad tutorials (from [monad tutorial fallacy](https://chrisdone.com/posts/monads-are-burritos/))

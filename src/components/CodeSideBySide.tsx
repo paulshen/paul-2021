@@ -14,6 +14,7 @@ export default function CodeSideBySide({
           max-width: none !important;
           display: flex;
           justify-content: center;
+          margin-bottom: -1em;
         }
       `}
     >

@@ -19,6 +19,11 @@ const Article = styled.article`
     background-color: #f0f0f0;
     font-family: var(--font-mono);
   }
+  blockquote {
+    background-color: var(--tan);
+    border-radius: 8px;
+    padding: 0.5em 2em;
+  }
   & > *:not(.full) {
     max-width: 35rem;
     margin-left: auto;
