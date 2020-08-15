@@ -16,7 +16,7 @@ export default function Pane({
   const rootRef = React.useRef<HTMLDivElement>(null)
   const rootOffset = React.useRef([0, 0])
   const cleanupDrag = React.useRef<() => void>()
-  const closeButtonRef = React.useRef<HTMLDivElement>(null)
+  const closeButtonRef = React.useRef<HTMLButtonElement>(null)
   function onHeaderMouseDown(e: React.MouseEvent) {
     if (closeButtonRef.current!.contains(e.target as Element)) {
       return
@@ -89,21 +89,24 @@ export default function Pane({
           flex-shrink: 0;
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          padding: 0 16px;
+          justify-content: flex-end;
         `}
         onMouseDown={onHeaderMouseDown}
       >
-        <div
+        <button
+          onClick={onClose}
+          ref={closeButtonRef}
           css={css`
+            background-color: transparent;
+            border: 0;
             color: var(--light);
-            font-family: var(--font-sans);
-            font-size: var(--font-size-smaller);
+            font-size: 0.7em;
+            letter-spacing: 0.08em;
+            margin-right: 12px;
+            padding: 4px 6px;
+            text-transform: uppercase;
           `}
         >
-          {title}
-        </div>
-        <button onClick={onClose} ref={closeButtonRef}>
           Close
         </button>
       </div>
