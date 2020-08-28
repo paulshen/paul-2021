@@ -1,7 +1,6 @@
 ---
 title: Monads for JavaScript developers
 slug: /monads-for-javascript-developers
-date: 2020-08-11
 ---
 
 import { PostPaneLink } from "../components/PostPane"
@@ -42,7 +41,7 @@ function run() {
 }
 ```
 
-Notice how we've created a context around the original value. Where we started with `increment` returning a `number`, `incrementWithLog` now returns a "tuple" `[number, string]` where the `string` represents the log message. Let's call this context `WithLog<T>` as `[T, string]` where `T` could be any type. In this example, `incrementWithLog` returns a `WithLog<number>`, with `T` being the `number`.
+Notice how we've created a context around the original value. Where we started with `increment` returning a `number`, `incrementWithLog` now returns a "tuple" `[number, string]` where the `string` represents the log message. Let's call this context `WithLog<T> = [T, string]` where `T` could be any type. In this example, `incrementWithLog` returns a `WithLog<number>`, with `T` being the `number`.
 
 What if we want to use this function multiple times?
 
@@ -63,9 +62,9 @@ function runWithLog() {
 }
 ```
 
-This is okay but there's extra work dealing with the log message. We need to destructure each return value. We can't just chain calls nicely like we can with `increment`. Can we make `WithLog` easier to work with?
+This is okay but there's extra work dealing with the log message. We need to destructure each return value. We can't chain calls nicely like we can with `increment`. Can we make `WithLog` easier to work with?
 
-Let's introduce a couple new functions. The first is `wrap`, which takes a plain old value and puts it in our context with `''`, representing an empty log.
+Let's introduce a couple new functions. The first is `wrap`, which takes a plain old value and puts it in our context with an empty log (represented by an empty string `''`).
 
 ```tsx
 type WithLog<T> = [T, string];
@@ -120,11 +119,7 @@ We have a context type `WithLog<T>` used to represent a value with a log message
 
 ## Why learn monads?
 
-Honestly? Because they're known to be hard to learn and that itself is kinda fun, right? Probably the same reason why I feel compelled to write yet another tutorial.
-
-Are monads useful to a JavaScript developer?
-
-Probably not? I personally don't think monads are that useful in JavaScript. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
+I don't think monads are that useful and definitely not necessary for JavaScript developers. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
 
 ### Haskell
 
@@ -170,11 +165,11 @@ class Applicative m => Monad m where
 
 Monad is a type class with kind `* -> *`. ***Damnit paul***
 
-The approximate English translation: **Monad is a generic type with one type parameter that also implements two functions, `return` and `bind`.**
+The approximate English translation: **Monad is a generic type with one type parameter. It also has two associated functions, `return` and `bind`.**
 
-If you're familiar with a type system like TypeScript, monads roughly look like `M<A>` where `M` is the monad and `A` is the type parameter. For example, `Array<T>` has the structure to be a potential monad.
+If you're familiar with a type system like TypeScript, monads roughly look like `M<A>` where `M` is the monad. For example, `Array<T>` has the structure to be a potential monad.
 
-Let's translate the Haskell definition above into loose TypeScript. I've replaced `return` with `wrap` because `return` is a restricted JavaScript keyword and extremely confusing. The `>>=` symbol is `bind`.
+Let's translate the Haskell definition above into pseudo TypeScript. I've replaced `return` with `wrap` because `return` is a restricted JavaScript keyword (and extremely confusing). The `>>=` symbol is `bind`.
 
 ```tsx
 interface MonadImplementation<M<_>> {
@@ -268,13 +263,15 @@ We're sequencing three functions here: `getUser`, `getProfileColor` and `parseCo
 The idea of `fmap` is more common function in JavaScript. I'm going to skip some Haskell details but let's meditate on the following function.
 
 ```tsx
-map: (M<A>, A => B) => M<B>
+fmap: (M<A>, A => B) => M<B>
 
 // A common example
 arrayMap: (Array<A>, A => B) => Array<B>
 ```
 
-`map` applies a function to values inside a context value. The most common operation is mapping over an array. Here's `map` for `Maybe`. I'm putting it side-by-side with `bind`.
+`fmap` applies a function to values inside a context value. The most common example is mapping over an array.
+
+Here's `map` for `Maybe`. I'm putting it side-by-side with `bind`.
 
 <CodeSideBySide>
 
@@ -301,9 +298,9 @@ function maybeBind<A>(m: Maybe<A>, f: A => Maybe<B>): Maybe<B> {
 
 ### Spot the differences
 
-They're so similar. The heart of the comparison is the type of `f`, the function parameter. The `f` for `map` returns `B` whereas `map` for `bind` returns `Maybe<B>`.
+They're so similar! The most notable difference is the type of `f`, the function parameter. The `f` for `map` returns `B` whereas `f` for `bind` returns `Maybe<B>`.
 
-If you pass in a `{value}` to `map`, you're definitely getting a `{value}` back (never `undefined`). However, `bind`'s given function has the power to return `undefined`. `bind`'s `f` has the ability to modify the "structure" of the context value. In a way, you can think of monad's `bind` as more powerful than `map`.
+If you pass in a `{value}` to `map`, you're definitely getting a `{value}` back (never `undefined`). However, `bind`'s given function can return `undefined`. `bind`'s `f` has the ability to modify the "structure" of the context value. In a way, you can think of monad's `bind` as more powerful than `map`.
 
 # Nice to know
 
@@ -317,9 +314,9 @@ Another way to think about monads is with <PostPaneLink mdxId="monad-join">`join
 
 # Recap
 
-A monad is a generic type that implement `wrap` and `bind`. They might be overhyped but they are essential in some programming languages, most notably Haskell. Monads enable side effects and allow sequencing actions in a pure functional programming language.
+A monad is a generic type that implements `wrap` and `bind`. Although the topic may be overhyped, monads are essential in some programming languages, most notably Haskell. Monads enable side effects and allow sequencing actions in a pure functional programming language.
 
-Please send any feedback or [follow me](https://twitter.com/_paulshen) on twitter if you want more content like this 🙏
+Was any part (or all of it!) confusing? Please send any comments on [twitter](https://twitter.com/_paulshen). Thanks!
 
 ## Links
 

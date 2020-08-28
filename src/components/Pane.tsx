@@ -100,6 +100,7 @@ export default function Pane({
             background-color: transparent;
             border: 0;
             color: var(--light);
+            cursor: pointer;
             font-size: 0.7em;
             letter-spacing: 0.08em;
             margin-right: 12px;
