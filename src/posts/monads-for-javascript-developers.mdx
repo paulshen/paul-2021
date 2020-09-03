@@ -1,6 +1,7 @@
 ---
 title: Monads for JavaScript developers
 slug: /monads-for-javascript-developers
+date: 2020-09-03
 ---
 
 import { PostPaneLink } from "../components/PostPane"
@@ -119,7 +120,7 @@ We have a context type `WithLog<T>` used to represent a value with a log message
 
 ## Why learn monads?
 
-I don't think monads are that useful and definitely not necessary for JavaScript developers. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
+For JavaScript developers, I don't think monads are that useful and are definitely not necessary to understand. However, ideas from functional programming are what inspired frameworks like React. Learning monads and alike gets you comfortable thinking about types at a higher level.
 
 ### Haskell
 
@@ -256,27 +257,28 @@ function main(userId: string): Maybe<number>  {
 }
 ```
 
-We're sequencing three functions here: `getUser`, `getProfileColor` and `parseColorHex`. If anything fails (returns `undefined`), the entire sequence will fail (return `undefined`).
+We're sequencing three functions here: `getUser`, `getProfileColor` and `parseColorHex`. If anything fails (returns `undefined`), the entire sequence will fail (return `undefined`). Note that if we don't fail, we will end with a `{value: answer}` instead of `{value: {value: {value: answer}}}`.
 
 # Comparing to `fmap`
 
 The idea of `fmap` is more common function in JavaScript. I'm going to skip some Haskell details but let's meditate on the following function.
 
 ```tsx
-fmap: (M<A>, A => B) => M<B>
+// Apply f to every A inside m
+fmap: (m: M<A>, f: A => B) => M<B>
 
 // A common example
-arrayMap: (Array<A>, A => B) => Array<B>
+arrayMap: (arr: Array<A>, f: A => B) => Array<B>
 ```
 
 `fmap` applies a function to values inside a context value. The most common example is mapping over an array.
 
-Here's `map` for `Maybe`. I'm putting it side-by-side with `bind`.
+Here's `fmap` for `Maybe`. I'm putting it side-by-side with `bind`.
 
 <CodeSideBySide>
 
 ```tsx
-function maybeMap<A>(m: Maybe<A>, f: A => B): Maybe<B> {
+function fmap<A>(m: Maybe<A>, f: A => B): Maybe<B> {
   if (m === undefined) {
     return undefined;
   }
@@ -287,7 +289,7 @@ function maybeMap<A>(m: Maybe<A>, f: A => B): Maybe<B> {
 ```
 
 ```tsx
-function maybeBind<A>(m: Maybe<A>, f: A => Maybe<B>): Maybe<B> {
+function bind<A>(m: Maybe<A>, f: A => Maybe<B>): Maybe<B> {
   if (m === undefined) {
     return undefined;
   }
@@ -298,9 +300,9 @@ function maybeBind<A>(m: Maybe<A>, f: A => Maybe<B>): Maybe<B> {
 
 ### Spot the differences
 
-They're so similar! The most notable difference is the type of `f`, the function parameter. The `f` for `map` returns `B` whereas `f` for `bind` returns `Maybe<B>`.
+They're so similar! The most notable difference is the type of `f`, the function parameter. The `f` for `fmap` returns `B` whereas `f` for `bind` returns `Maybe<B>`.
 
-If you pass in a `{value}` to `map`, you're definitely getting a `{value}` back (never `undefined`). However, `bind`'s given function can return `undefined`. `bind`'s `f` has the ability to modify the "structure" of the context value. In a way, you can think of monad's `bind` as more powerful than `map`.
+If you pass in a `{value}` to `fmap`, you're definitely getting a `{value}` back (never `undefined`). However, `bind`'s given function can return `undefined`. `bind`'s `f` has the ability to modify the "structure" of the context value. In a way, you can think of monad's `bind` as more powerful than `fmap`.
 
 # Nice to know
 
@@ -316,7 +318,7 @@ Another way to think about monads is with <PostPaneLink mdxId="monad-join">`join
 
 A monad is a generic type that implements `wrap` and `bind`. Although the topic may be overhyped, monads are essential in some programming languages, most notably Haskell. Monads enable side effects and allow sequencing actions in a pure functional programming language.
 
-Was any part (or all of it!) confusing? Please send any comments on [twitter](https://twitter.com/_paulshen). Thanks!
+I hope you found this useful. Please send any comments/feedback on [twitter](https://twitter.com/_paulshen). Thanks!
 
 ## Links
 
