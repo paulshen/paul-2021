@@ -7,6 +7,10 @@ const path = require("path")
 
 module.exports = {
   /* Your site config here */
+  siteMetadata: {
+    title: "Paul Shen",
+    siteUrl: "https://bypaulshen.com/",
+  },
   plugins: [
     {
       resolve: "gatsby-plugin-typescript",

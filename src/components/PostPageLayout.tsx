@@ -2,13 +2,13 @@ import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import { graphql, Link } from "gatsby"
 import React from "react"
-import { Helmet } from "react-helmet"
 import Article from "./Article"
 import Body from "./Body"
 import Header from "./Header"
 import Layout from "./Layout"
 import MDXBody from "./MDXBody"
 import PageTitle from "./PageTitle"
+import SEO from "./SEO"
 
 const ArticleDate = styled.div`
   font-family: var(--font-sans);
@@ -35,16 +35,22 @@ export default function PostPageLayout({
     mdx: {
       id: string
       body: string
+      excerpt: string
       frontmatter: {
         title: string
         date: string
+        image: string | undefined
       }
     }
   }
 }) {
   return (
     <Layout>
-      <Helmet title={`${mdx.frontmatter.title} | Paul Shen`} />
+      <SEO
+        title={mdx.frontmatter.title}
+        description={mdx.excerpt}
+        image={mdx.frontmatter.image}
+      />
       <Header />
       <Body
         css={css`
@@ -73,9 +79,11 @@ export const pageQuery = graphql`
     mdx(id: { eq: $id }) {
       id
       body
+      excerpt
       frontmatter {
         title
         date(formatString: "MMMM DD, YYYY")
+        image
       }
     }
   }

@@ -6,7 +6,10 @@ export default ({ children }: { children: React.ReactNode }) => (
   <>
     <Helmet title="Paul Shen">
       {/* <link rel="stylesheet" href="https://use.typekit.net/lof7pip.css"></link> */}
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"></link>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      ></link>
     </Helmet>
     <Global
       styles={css`
@@ -32,7 +35,9 @@ export default ({ children }: { children: React.ReactNode }) => (
           margin: 0;
           -webkit-font-smoothing: antialiased;
         }
-        button, input, textarea {
+        button,
+        input,
+        textarea {
           font-family: var(--font-sans);
         }
         a {
