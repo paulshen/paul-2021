@@ -1,0 +1,3 @@
+[submodule "react-notion"]
+	path = react-notion
+	url = git@github.com:paulshen/react-notion.git
