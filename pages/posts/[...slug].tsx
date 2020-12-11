@@ -64,7 +64,7 @@ export async function getStaticProps({ params: { slug } }) {
 
 const Page = ({ post, blocks, panes, exercises }) => {
   return (
-    <div className="max-w-xl pt-16 pb-32 mx-auto">
+    <div className="max-w-xl pt-16 pb-32 px-4 mx-auto">
       <h1 className="text-3xl mb-8 font-bold">{post["Title"]}</h1>
       <NotionRenderer
         blockMap={blocks}
