@@ -1,5 +1,6 @@
 import { NotionRenderer } from "react-notion/src";
 import { getAllPosts } from "../";
+import { renderEditor } from "../../components/renderEditor";
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
@@ -28,8 +29,8 @@ export async function getStaticProps({ params: { slug } }) {
         id: row.id,
         name: row["Name"][0][0],
         prompt: row["Prompt"],
-        exercise: row["Exercise"],
-        solution: row["Solution"],
+        exercise: row["Exercise"][0][0],
+        solution: row["Solution"][0][0],
       }));
     }
     if (
@@ -65,7 +66,12 @@ const Page = ({ post, blocks, panes, exercises }) => {
   return (
     <div className="max-w-xl pt-16 pb-32 mx-auto">
       <h1 className="text-3xl mb-8 font-bold">{post["Title"]}</h1>
-      <NotionRenderer blockMap={blocks} panes={panes} exercises={exercises} />
+      <NotionRenderer
+        blockMap={blocks}
+        panes={panes}
+        exercises={exercises}
+        renderEditor={renderEditor}
+      />
     </div>
   );
 };
