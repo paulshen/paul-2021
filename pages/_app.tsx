@@ -3,7 +3,7 @@ import "../styles/global.css";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <div>
+    <div className="text-gray-900">
       <Header />
       <Component {...pageProps} />
     </div>

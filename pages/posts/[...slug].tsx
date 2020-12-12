@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { NotionRenderer } from "react-notion/src";
-import { getAllPosts } from "../";
+import { getAllPosts } from "./";
 import { renderEditor } from "../../components/renderEditor";
 
 export async function getStaticPaths() {
@@ -69,7 +69,7 @@ const Page = ({ post, blocks, panes, exercises }) => {
       <Head>
         <title>{`${post["Title"]} | Paul Shen`}</title>
       </Head>
-      <h1 className="text-3xl mb-8 font-semibold">{post["Title"]}</h1>
+      <h1 className="text-3xl mb-12 font-semibold">{post["Title"]}</h1>
       <NotionRenderer
         blockMap={blocks}
         panes={panes}

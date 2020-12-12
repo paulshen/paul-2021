@@ -15,7 +15,7 @@ function MenuItem({ href, children }: { href: string; children: string }) {
 
 export default function Header() {
   return (
-    <div className="absolute group pt-4 px-4 flex left-0 top-0 right-0 align-middle justify-between md:px-6 lg:fixed lg:right-auto lg:block lg:pl-10 lg:pt-10">
+    <div className="absolute group pt-4 px-4 flex left-0 top-0 right-0 items-center justify-between md:px-6 lg:fixed lg:right-auto lg:block lg:pl-10 lg:pt-10">
       <Link href="/">
         <a className="inline-block text-gray-200 lg:mb-8 hover:text-gray-800 transition-colors">
           paul shen
