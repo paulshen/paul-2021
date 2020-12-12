@@ -40,10 +40,10 @@ function formatDate(dateString: string): string {
 
 function PostItem({ post }: { post: any }) {
   return (
-    <div className="border-t border-gray-100 py-4 group">
+    <div className="border-t border-gray-100 py-3 sm:py-4 group">
       <Link href="/posts/[slug]" as={`/posts/${post["Slug"]}`}>
         <a className="sm:flex sm:items-center">
-          <div className="text-xs text-gray-300 sm:w-32">
+          <div className="text-xs text-gray-400 sm:w-32">
             {post["Date"] !== undefined ? formatDate(post["Date"]) : null}
           </div>
           <div className="font-semibold group-hover:underline">
