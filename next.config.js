@@ -1,5 +1,5 @@
 module.exports = {
   images: {
-    domains: ["www.notion.so"],
+    domains: ["bypaulshen.com", "www.notion.so"],
   },
 };

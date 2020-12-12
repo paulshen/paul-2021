@@ -29,8 +29,8 @@ const Page = ({ scribbles }) => {
             <Image
               src={scribble["Image"][0].url}
               layout="intrinsic"
-              width="600"
-              height="600"
+              width={640}
+              height={640}
             />
           </div>
         ))}
