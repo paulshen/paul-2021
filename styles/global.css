@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 @import "./prism.css";
+
+@screen sm {
+  .columns {
+    margin-right: -32px;
+  }
+
+  .column {
+    width: calc((100% - var(--spacer-total-width)) * var(--ratio));
+  }
+
+  .spacer {
+    flex-shrink: 0;
+    width: var(--spacer-width);
+  }
+}
