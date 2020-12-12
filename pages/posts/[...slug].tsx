@@ -7,7 +7,7 @@ export async function getStaticPaths() {
   const posts = await getAllPosts();
   return {
     paths: posts.map((row) => `/posts/${row["Slug"]}`),
-    fallback: true,
+    fallback: false,
   };
 }
 
@@ -64,6 +64,9 @@ export async function getStaticProps({ params: { slug } }) {
 }
 
 const Page = ({ post, blocks, panes, exercises }) => {
+  if (post === undefined) {
+    return null;
+  }
   return (
     <div className="max-w-xl pt-24 pb-32 px-4 mx-auto">
       <Head>
