@@ -55,7 +55,7 @@ function PostItem({ post }: { post: any }) {
   );
 }
 
-function HomePage({ posts }) {
+function PostsPage({ posts }) {
   return (
     <div className="max-w-xl pt-24 pb-32 px-4 mx-auto">
       <h1 className="text-3xl mb-12 font-semibold">Posts</h1>
@@ -68,4 +68,4 @@ function HomePage({ posts }) {
   );
 }
 
-export default HomePage;
+export default PostsPage;
