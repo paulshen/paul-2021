@@ -1,7 +1,9 @@
 import Head from "next/head";
+import Link from "next/link";
 import { NotionRenderer } from "react-notion/src";
-import { getAllPosts } from "./";
 import { renderEditor } from "../../components/renderEditor";
+import { formatDate } from "../../Utils";
+import { getAllPosts } from "./";
 
 export async function getStaticPaths() {
   const posts = await getAllPosts();
@@ -79,6 +81,20 @@ const Page = ({ post, blocks, panes, exercises }) => {
         exercises={exercises}
         renderEditor={renderEditor}
       />
+      <div className="mt-4 mb-16 text-gray-400 text-xs">
+        {formatDate(post["Date"], true)}
+      </div>
+      <div className="border-t border-gray-100 pt-4 text-xs text-gray-400">
+        Browse more{" "}
+        <Link href="/posts">
+          <a className="underline">posts</a>
+        </Link>{" "}
+        or follow on{" "}
+        <a href="https://twitter.com/_paulshen" className="underline">
+          Twitter
+        </a>
+        .
+      </div>
     </div>
   );
 };

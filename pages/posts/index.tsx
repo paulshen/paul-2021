@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatDate } from "../../Utils";
 
 const NOTION_BLOG_ID = "d60770573fee487984f182b3a72fa803";
 
@@ -16,26 +17,6 @@ export async function getStaticProps() {
       posts,
     },
   };
-}
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-function formatDate(dateString: string): string {
-  const segments = dateString.split("-").map((s) => parseInt(s));
-  return `${MONTHS[segments[1] - 1]} ${segments[0]}`;
 }
 
 function PostItem({ post }: { post: any }) {
