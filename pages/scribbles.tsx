@@ -18,7 +18,7 @@ export async function getStaticProps() {
 
 const Page = ({ scribbles }) => {
   return (
-    <div className="max-w-4xl w-4/5 pt-24 pb-32 px-4 mx-auto">
+    <div className="max-w-4xl w-11/12 sm:w-4/5 pt-24 pb-32 px-4 mx-auto">
       <Head>
         <title>Scribbles | Paul Shen</title>
       </Head>
