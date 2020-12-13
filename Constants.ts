@@ -1,0 +1,3 @@
+export const ABOUT_PAGE_ID = "5cf920e4a3e0484283beb2b4ccdae0af";
+export const POSTS_TABLE_ID = "d60770573fee487984f182b3a72fa803";
+export const SCRIBBLE_PAGE_ID = "6b46257aea3846269127f8990c614400";

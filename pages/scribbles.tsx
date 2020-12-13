@@ -1,8 +1,7 @@
 import Head from "next/head";
-import React from "react";
 import Image from "next/image";
-
-const SCRIBBLE_PAGE_ID = "6b46257aea3846269127f8990c614400";
+import React from "react";
+import { SCRIBBLE_PAGE_ID } from "../Constants";
 
 export async function getStaticProps() {
   const scribbles = await fetch(

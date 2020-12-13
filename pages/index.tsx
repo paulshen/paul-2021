@@ -1,7 +1,7 @@
 import Head from "next/head";
-import Link from "next/link";
 import Image from "next/image";
-import React, { Children } from "react";
+import Link from "next/link";
+import React from "react";
 
 function StyledLink(props) {
   const { children, ...restProps } = props;

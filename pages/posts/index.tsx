@@ -1,11 +1,10 @@
 import Link from "next/link";
+import { POSTS_TABLE_ID } from "../../Constants";
 import { formatDate } from "../../Utils";
-
-const NOTION_BLOG_ID = "d60770573fee487984f182b3a72fa803";
 
 export const getAllPosts = async () => {
   return await fetch(
-    `https://notion-api.splitbee.io/v1/table/${NOTION_BLOG_ID}`
+    `https://notion-api.splitbee.io/v1/table/${POSTS_TABLE_ID}`
   ).then((res) => res.json());
 };
 
