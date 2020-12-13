@@ -1,3 +1,4 @@
+import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { NotionRenderer } from "react-notion/src";
@@ -13,7 +14,11 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params: { slug } }) {
+export const getStaticProps: GetStaticProps = async ({
+  params: { slug },
+}: {
+  params: { slug: string[] };
+}) => {
   const posts = await getAllPosts();
   const post = posts.find((p) => p["Slug"] === slug.join("/"));
   const blocks = await fetch(
@@ -62,8 +67,9 @@ export async function getStaticProps({ params: { slug } }) {
       panes,
       exercises,
     },
+    revalidate: 1,
   };
-}
+};
 
 const Page = ({ post, blocks, panes, exercises }) => {
   if (post === undefined) {
