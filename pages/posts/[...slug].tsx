@@ -79,6 +79,12 @@ const Page = ({ post, blocks, panes, exercises }) => {
     <div className="max-w-xl pt-24 pb-32 px-4 mx-auto">
       <Head>
         <title>{`${post["Title"]} | Paul Shen`}</title>
+        {post["Image"] !== undefined && post["Image"][0] !== undefined ? (
+          <>
+            <meta property="twitter:card" content="summary_large_image" />
+            <meta property="og:image" content={post["Image"][0].url} />
+          </>
+        ) : null}
       </Head>
       <h1 className="text-3xl mb-12 font-semibold">{post["Title"]}</h1>
       <NotionRenderer
