@@ -21,7 +21,7 @@ const Page = ({ scribbles }) => {
       <div className="flex flex-col-reverse sm:flex-row sm:space-x-4">
         <div className="flex-1">
           <Image
-            src="https://bypaulshen.com/static/256f1082ea031855f9adbca9e93ce3c9/10d63/35999786_217229322446458_3470015180652412928_n.jpg"
+            src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe498b6c0-e92f-4405-9ee5-6a38b8ba983a%2F35999786_217229322446458_3470015180652412928_n.jpg?table=block&id=cdaa3df5-bf38-45e9-8efc-66f9dd0d22dc&width=600&userId=61d31f4e-3212-4161-86d4-88c06257e749&cache=v2"
             layout="intrinsic"
             width={640}
             height={640}
