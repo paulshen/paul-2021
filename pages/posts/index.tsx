@@ -3,9 +3,10 @@ import { POSTS_TABLE_ID } from "../../Constants";
 import { formatDate } from "../../Utils";
 
 export const getAllPosts = async () => {
-  return await fetch(
+  const posts = await fetch(
     `https://notion-api.bypaulshen.com/v1/table/${POSTS_TABLE_ID}`
   ).then((res) => res.json());
+  return posts.filter((p) => p["Publish"]);
 };
 
 export async function getStaticProps() {
