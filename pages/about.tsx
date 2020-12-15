@@ -5,14 +5,14 @@ import { ABOUT_PAGE_ID } from "../Constants";
 
 export const getStaticProps: GetStaticProps = async () => {
   const blocks = await fetch(
-    `https://notion-api.splitbee.io/v1/page/${ABOUT_PAGE_ID}`
+    `https://notion-api.bypaulshen.com/v1/page/${ABOUT_PAGE_ID}`
   ).then((res) => res.json());
 
   return {
     props: {
       blocks,
     },
-    revalidate: 1,
+    revalidate: 10,
   };
 };
 

@@ -22,7 +22,7 @@ export const getStaticProps: GetStaticProps = async ({
   const posts = await getAllPosts();
   const post = posts.find((p) => p["Slug"] === slug.join("/"));
   const blocks = await fetch(
-    `https://notion-api.splitbee.io/v1/page/${post.id}`
+    `https://notion-api.bypaulshen.com/v1/page/${post.id}`
   ).then((res) => res.json());
 
   let panes = [];
@@ -48,7 +48,7 @@ export const getStaticProps: GetStaticProps = async ({
       panes = await Promise.all(
         block.collection.data.map(async (row) => {
           const blocks = await fetch(
-            `https://notion-api.splitbee.io/v1/page/${row.id}`
+            `https://notion-api.bypaulshen.com/v1/page/${row.id}`
           ).then((res) => res.json());
           return {
             id: row.id,
@@ -67,7 +67,7 @@ export const getStaticProps: GetStaticProps = async ({
       panes,
       exercises,
     },
-    revalidate: 1,
+    revalidate: 10,
   };
 };
 

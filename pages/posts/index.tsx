@@ -4,7 +4,7 @@ import { formatDate } from "../../Utils";
 
 export const getAllPosts = async () => {
   return await fetch(
-    `https://notion-api.splitbee.io/v1/table/${POSTS_TABLE_ID}`
+    `https://notion-api.bypaulshen.com/v1/table/${POSTS_TABLE_ID}`
   ).then((res) => res.json());
 };
 
@@ -15,6 +15,7 @@ export async function getStaticProps() {
     props: {
       posts,
     },
+    revalidate: 10,
   };
 }
 

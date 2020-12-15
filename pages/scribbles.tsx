@@ -5,13 +5,14 @@ import { SCRIBBLE_PAGE_ID } from "../Constants";
 
 export async function getStaticProps() {
   const scribbles = await fetch(
-    `https://notion-api.splitbee.io/v1/table/${SCRIBBLE_PAGE_ID}`
+    `https://notion-api.bypaulshen.com/v1/table/${SCRIBBLE_PAGE_ID}`
   ).then((res) => res.json());
 
   return {
     props: {
       scribbles,
     },
+    revalidate: 10,
   };
 }
 
