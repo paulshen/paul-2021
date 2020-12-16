@@ -6,7 +6,9 @@ export const getAllPosts = async () => {
   const posts = await fetch(
     `https://notion-api.bypaulshen.com/v1/table/${POSTS_TABLE_ID}`
   ).then((res) => res.json());
-  return posts.filter((p) => p["Publish"]);
+  return process.env.NODE_ENV === "development"
+    ? posts
+    : posts.filter((p) => p["Publish"]);
 };
 
 export async function getStaticProps() {
