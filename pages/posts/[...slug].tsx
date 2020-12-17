@@ -75,12 +75,11 @@ const Page = ({ post, blocks, panes, exercises }) => {
   if (post === undefined) {
     return null;
   }
-  const title = `${post["Title"]} | Paul Shen`;
   return (
     <div className="max-w-xl pt-24 pb-32 px-4 mx-auto">
       <Head>
-        <title>{title}</title>
-        <meta property="og:title" content={title} />
+        <title>{`${post["Title"]} | Paul Shen`}</title>
+        <meta property="og:title" content={post["Title"]} />
         {post["Description"] ? (
           <meta property="og:description" content={post["Description"]} />
         ) : null}
