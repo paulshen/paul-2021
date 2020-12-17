@@ -10,11 +10,13 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
+      ...defaultTheme.fontFamily,
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
     },
     colors: {
       ...defaultTheme.colors,
       gray: colors.gray,
+      tan: "#f8f3e6",
     },
     extend: {},
   },
