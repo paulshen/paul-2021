@@ -15,7 +15,7 @@ module.exports = {
     },
     fontSize: {
       ...defaultTheme.fontSize,
-      base: "0.9rem",
+      sm: ["0.875rem", { lineHeight: "1.4rem" }],
     },
     colors: {
       ...defaultTheme.colors,
