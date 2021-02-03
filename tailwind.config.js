@@ -13,6 +13,10 @@ module.exports = {
       ...defaultTheme.fontFamily,
       sans: ["Inter", ...defaultTheme.fontFamily.sans],
     },
+    fontSize: {
+      ...defaultTheme.fontSize,
+      base: "0.9rem",
+    },
     colors: {
       ...defaultTheme.colors,
       gray: colors.gray,
