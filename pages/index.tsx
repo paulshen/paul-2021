@@ -6,8 +6,8 @@ import React from "react";
 function StyledLink(props) {
   const { children, ...restProps } = props;
   return (
-    <Link {...restProps}>
-      <a className="text-gray-500 underline">{children}</a>
+    <Link {...restProps} className="text-gray-500 underline">
+      {children}
     </Link>
   );
 }
@@ -22,9 +22,13 @@ const Page = ({ scribbles }) => {
         <div className="flex-1">
           <Image
             src="https://www.notion.so/image/https%3A%2F%2Fs3-us-west-2.amazonaws.com%2Fsecure.notion-static.com%2Fe498b6c0-e92f-4405-9ee5-6a38b8ba983a%2F35999786_217229322446458_3470015180652412928_n.jpg?table=block&id=cdaa3df5-bf38-45e9-8efc-66f9dd0d22dc&width=600&userId=61d31f4e-3212-4161-86d4-88c06257e749&cache=v2"
-            layout="intrinsic"
+            alt="My line drawing of a ketchup and kombucha bottle"
             width={640}
             height={640}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+            }}
           />
         </div>
         <div className="flex-1 pt-4">

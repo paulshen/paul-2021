@@ -25,15 +25,17 @@ export async function getStaticProps() {
 function PostItem({ post }: { post: any }) {
   return (
     <div className="border-t border-gray-100">
-      <Link href="/posts/[slug]" as={`/posts/${post["Slug"]}`}>
-        <a className="block py-3 sm:py-4 sm:flex sm:items-center group">
-          <div className="text-xs text-gray-400 sm:w-32">
-            {post["Date"] !== undefined ? formatDate(post["Date"]) : null}
-          </div>
-          <div className="font-semibold group-hover:underline">
-            {post["Title"]}
-          </div>
-        </a>
+      <Link
+        href="/posts/[slug]"
+        as={`/posts/${post["Slug"]}`}
+        className="block py-3 sm:py-4 sm:flex sm:items-center group"
+      >
+        <div className="text-xs text-gray-400 sm:w-32">
+          {post["Date"] !== undefined ? formatDate(post["Date"]) : null}
+        </div>
+        <div className="font-semibold group-hover:underline">
+          {post["Title"]}
+        </div>
       </Link>
     </div>
   );

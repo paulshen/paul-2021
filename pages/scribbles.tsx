@@ -28,9 +28,13 @@ const Page = ({ scribbles }) => {
           <div className="" key={i}>
             <Image
               src={scribble["Image"][0].url}
-              layout="intrinsic"
+              alt="My line drawing"
               width={640}
               height={640}
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+              }}
             />
           </div>
         ))}

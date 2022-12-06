@@ -106,8 +106,8 @@ const Page = ({ post, blocks, panes, exercises }) => {
       </div>
       <div className="border-t border-gray-100 pt-4 text-xs text-gray-400">
         Browse more{" "}
-        <Link href="/posts">
-          <a className="underline">posts</a>
+        <Link href="/posts" className="underline">
+          posts
         </Link>{" "}
         or follow on{" "}
         <a href="https://twitter.com/_paulshen" className="underline">
